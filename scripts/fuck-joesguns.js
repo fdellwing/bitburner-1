@@ -5,7 +5,6 @@ let ns = null;
 /** @param {NS} _ns **/
 export async function main(_ns) {
     ns = _ns;    
-
     /*
     var servers = ns.getPurchasedServers();
     if(servers.length>0){
@@ -25,7 +24,7 @@ export async function main(_ns) {
 
 async function fuckJoesGuns(){
     // How much RAM each purchased server will have. In this case, it'll
-    // be 8GB.
+    // be 16GB.
     var ram = 16;
     var scriptName = "early-hack.js";
 
