@@ -24,5 +24,7 @@ The miletstones for achieving this are:
 Some things I dicovered that help are:
 - Get all the Tian Di Hui augmentations as early as possible, because it helps with getting faction rep, which takes longer and longer the further you get into the game. You can travel to New Tokyo to get the invite.
 
+- Instead of creating your programs get the tor router and go to darkweb and buy them. This saves a ton of time.
+
 
 
