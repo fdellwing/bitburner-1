@@ -17,3 +17,9 @@ export function getAllServers(ns, rootHost = 'home', includePersonal = false) {
 
     return [...list]
 }
+
+/** @param {import(".").NS} ns*/
+export function getPurchasedServers(ns){
+    ns.disableLog('scan')
+    return ns.scan("home").filter(server => ns.getServer(server).purchasedByPlayer);
+}
