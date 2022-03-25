@@ -2,7 +2,7 @@
 let ns = null;
 var visited = [];
 var path = [];
-var findMePlease;
+var findMePlease="";
 /** @param {NS} _ns **/
 export async function main(_ns) {
     ns = _ns;    
@@ -10,7 +10,7 @@ export async function main(_ns) {
         ns.tprint("hostname to find required as an argument!");
         return;
     } 
-    findMePlease = ns.args[0];
+    findMePlease = ns.args[0].toLowerCase();
     visited.push("home");
     path.push("home");
     if(findHost("home")){
@@ -32,6 +32,7 @@ function findHost(hostname){
             continue; // already been here
         }
         visited.push(node);
+        ns.printf("visiting %s", node)
         path.push(node);
         if(findHost(node)){
             return true;

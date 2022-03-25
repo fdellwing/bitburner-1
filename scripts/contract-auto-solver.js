@@ -54,6 +54,9 @@ function solve(type, data, server, contract, ns) {
         case "Find All Valid Math Expressions":
             solution = findAllValidMathExpressions(data);
             break;
+        case "Array Jumping Game":            
+            solution = solveArrayJumpingGame(data, 0);
+            break;
         default:
             ns.tprintf("Type '%s' has no solving function.", type);
             solution = ""
@@ -345,4 +348,23 @@ function getExprUtil(res, curExp, input, target, pos, curVal, last)
     }
 }
 
+// Array Jumping Game
+function solveArrayJumpingGame(a, i) {
+    var l = a.length;
+    if (l == 0) return 0; // empty array, WTF?
+    if (i >= l) return 0; // past end of array
+    if (i == l - 1){
+        //ns.tprintf("a[%d] = %d", i, a[i])
+        return 1; // The end has been reached.    
+        
+    }
+    var k = a[i];
+    for (let j = 1; j <= k; ++j) {
+        if (solveArrayJumpingGame(a, i + j)) {
+            //ns.tprintf("a[%d] = %d; j = %d", i, a[i], j)
+            return 1;
+        }
+    }
+    return 0;
+}
 
