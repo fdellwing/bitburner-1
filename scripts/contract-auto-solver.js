@@ -21,7 +21,7 @@ function solve(type, data, server, contract, ns) {
         case "Algorithmic Stock Trader I":
             solution = maxProfit([1, data]);
             break;
-        case "Algorithmic Stock Trader II": 
+        case "Algorithmic Stock Trader II":
             solution = maxProfit([Math.ceil(data.length / 2), data]);
             break;
         case "Algorithmic Stock Trader III":
@@ -54,9 +54,12 @@ function solve(type, data, server, contract, ns) {
         case "Find All Valid Math Expressions":
             solution = findAllValidMathExpressions(data);
             break;
-        case "Array Jumping Game":            
+        case "Array Jumping Game":
             solution = solveArrayJumpingGame(data, 0);
             break;
+        case "Subarray with Maximum Sum":
+            solution = subarrayMaxSum(data);
+            break;        
         default:
             ns.tprintf("Type '%s' has no solving function.", type);
             solution = ""
@@ -290,20 +293,17 @@ function mergeOverlap(intervals) {
 
 // Find All Valid Math Expressions
 
-function findAllValidMathExpressions(data)
-{
+function findAllValidMathExpressions(data) {
     let input = data[0];
     let target = data[1];
     let res = [];
     getExprUtil(res, "", input, target, 0, 0, 0);
     return res;
 }
-function getExprUtil(res, curExp, input, target, pos, curVal, last)
-{
+function getExprUtil(res, curExp, input, target, pos, curVal, last) {
     // true if whole input is processed with some
     // operators
-    if (pos == input.length)
-    {
+    if (pos == input.length) {
         // if current value is equal to target
         //then only add to final solution
         // if question is : all possible o/p then just
@@ -314,8 +314,7 @@ function getExprUtil(res, curExp, input, target, pos, curVal, last)
     }
 
     // loop to put operator at all positions
-    for (let i = pos; i < input.length; i++)
-    {
+    for (let i = pos; i < input.length; i++) {
         // ignoring case which start with 0 as they
         // are useless for evaluation
         if (i != pos && input[pos] == '0')
@@ -331,19 +330,18 @@ function getExprUtil(res, curExp, input, target, pos, curVal, last)
         // for next recursion
         if (pos == 0)
             getExprUtil(res, curExp + part, input,
-                     target, i + 1, cur, cur);
+                target, i + 1, cur, cur);
 
 
         // try all given binary operator for evaluation
-        else
-        {
+        else {
             getExprUtil(res, curExp + "+" + part, input,
-                     target, i + 1, curVal + cur, cur);
+                target, i + 1, curVal + cur, cur);
             getExprUtil(res, curExp + "-" + part, input,
-                     target, i + 1, curVal - cur, -cur);
+                target, i + 1, curVal - cur, -cur);
             getExprUtil(res, curExp + "*" + part, input,
-                     target, i + 1, curVal - last + last * cur,
-                     last * cur);
+                target, i + 1, curVal - last + last * cur,
+                last * cur);
         }
     }
 }
@@ -353,10 +351,10 @@ function solveArrayJumpingGame(a, i) {
     var l = a.length;
     if (l == 0) return 0; // empty array, WTF?
     if (i >= l) return 0; // past end of array
-    if (i == l - 1){
+    if (i == l - 1) {
         //ns.tprintf("a[%d] = %d", i, a[i])
         return 1; // The end has been reached.    
-        
+
     }
     var k = a[i];
     for (let j = 1; j <= k; ++j) {
@@ -368,3 +366,25 @@ function solveArrayJumpingGame(a, i) {
     return 0;
 }
 
+// Subarray with Maximum Sum
+
+function subarrayMaxSum(a){
+    if(a.length == 0){
+        return 0;
+    }
+    var l = a.length;
+    var maxSum = a[0]; // start with the first value in the array as the max sum
+    for(let i = 0; i < l; i++){
+        var c = a[i];
+        if(c > maxSum){
+            maxSum = c;
+        }
+        for(let j = i + 1; j < l; j++){
+            c += a[j];
+            if(c > maxSum){
+                maxSum = c;
+            }    
+        }
+    }
+    return maxSum;
+}
