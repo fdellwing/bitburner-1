@@ -1,8 +1,8 @@
 /** @type import(".").NS */
 let ns = null;
-var visited = [];
-var path = [];
-var findMePlease="";
+let visited = [];
+let path = [];
+let findMePlease="";
 /** @param {NS} _ns **/
 export async function main(_ns) {
     ns = _ns;    
@@ -11,6 +11,7 @@ export async function main(_ns) {
         return;
     } 
     findMePlease = ns.args[0].toLowerCase();
+    ns.tprintf("finding %s", findMePlease);
     visited.push("home");
     path.push("home");
     if(findHost("home")){
@@ -18,6 +19,7 @@ export async function main(_ns) {
     } else {
         ns.tprint("Not found!");
     }
+    ns.exit();
 }
 
 function findHost(hostname){

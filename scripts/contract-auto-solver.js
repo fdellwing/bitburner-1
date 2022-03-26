@@ -68,10 +68,10 @@ function solve(type, data, server, contract, ns) {
             break;
         default:
             ns.tprintf("Type '%s' has no solving function.", type);
-            solution = ""
+            solution = "$FUCKMEINTHEGOATASS!"
             break;
     }
-    return (solution != "") ? ns.codingcontract.attempt(solution, contract, server, [true]) : "";
+    return ("$FUCKMEINTHEGOATASS!" != solution) ? ns.codingcontract.attempt(solution, contract, server, [true]) : "";
 }
 
 //ALGORITHMIC STOCK TRADER
@@ -161,31 +161,16 @@ function factorialDivision(n, d) {
     return factorialDivision(n - 1, d) * n;
 }
 
-function uniquePathsII(grid, ignoreFirst = false, ignoreLast = false) {
-    const rightMoves = grid[0].length - 1;
-    const downMoves = grid.length - 1;
-
-    let totalPossiblePaths = Math.round(factorialDivision(rightMoves + downMoves, rightMoves) / (factorial(downMoves)));
-
-    for (let i = 0; i < grid.length; i++) {
-        for (let j = 0; j < grid[i].length; j++) {
-
-            if (grid[i][j] == 1 && (!ignoreFirst || (i != 0 || j != 0)) && (!ignoreLast || (i != grid.length - 1 || j != grid[i].length - 1))) {
-                const newArray = [];
-                for (let k = i; k < grid.length; k++) {
-                    newArray.push(grid[k].slice(j, grid[i].length));
-                }
-
-                let removedPaths = uniquePathsII(newArray, true, ignoreLast);
-                removedPaths *= uniquePathsI([i + 1, j + 1]);
-
-                totalPossiblePaths -= removedPaths;
-            }
-        }
-
-    }
-
-    return totalPossiblePaths;
+function uniquePathsII(grid) {
+    if (grid[0][0]) return 0
+    let m = grid.length, n = grid[0].length
+    let dp = Array.from({ length: m }, el => new Uint32Array(n))
+    dp[0][0] = 1
+    for (let i = 0; i < m; i++)
+        for (let j = 0; j < n; j++)
+            if (grid[i][j] || (!i && !j)) continue
+            else dp[i][j] = (i ? dp[i - 1][j] : 0) + (j ? dp[i][j - 1] : 0)
+    return dp[m - 1][n - 1]
 }
 
 //GENERATE IP ADDRESSES
