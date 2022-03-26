@@ -59,10 +59,13 @@ function solve(type, data, server, contract, ns) {
             break;
         case "Subarray with Maximum Sum":
             solution = subarrayMaxSum(data);
-            break;     
+            break;
         case "Sanitize Parentheses in Expression":
             solution = sanitizeParentheses(data);
-            break;   
+            break;
+        case "Total Ways to Sum":
+            solution = totalWaysToSum(data);
+            break;
         default:
             ns.tprintf("Type '%s' has no solving function.", type);
             solution = ""
@@ -371,22 +374,22 @@ function solveArrayJumpingGame(a, i) {
 
 // Subarray with Maximum Sum
 
-function subarrayMaxSum(a){
-    if(a.length == 0){
+function subarrayMaxSum(a) {
+    if (a.length == 0) {
         return 0;
     }
     var l = a.length;
     var maxSum = a[0]; // start with the first value in the array as the max sum
-    for(let i = 0; i < l; i++){
+    for (let i = 0; i < l; i++) {
         var c = a[i];
-        if(c > maxSum){
+        if (c > maxSum) {
             maxSum = c;
         }
-        for(let j = i + 1; j < l; j++){
+        for (let j = i + 1; j < l; j++) {
             c += a[j];
-            if(c > maxSum){
+            if (c > maxSum) {
                 maxSum = c;
-            }    
+            }
         }
     }
     return maxSum;
@@ -394,18 +397,13 @@ function subarrayMaxSum(a){
 
 // Sanitize Parentheses in Expression
 
-function isParenthesis(c)
-{
+function isParenthesis(c) {
     return ((c == '(') || (c == ')'));
 }
- 
-// method returns true if string contains valid
-// parenthesis
-function isValidString(str)
-{
+
+function isValidString(str) {
     let cnt = 0;
-    for (let i = 0; i < str.length; i++)
-    {
+    for (let i = 0; i < str.length; i++) {
         if (str[i] == '(')
             cnt++;
         else if (str[i] == ')')
@@ -415,43 +413,56 @@ function isValidString(str)
     }
     return (cnt == 0);
 }
- 
-function sanitizeParentheses(str)
-{
-    var res=[];
-    if (str.length==0)
+
+function sanitizeParentheses(str) {
+    var res = [];
+    if (str.length == 0)
         return res;
-   
+
     let visit = new Set();
-   
+
     let q = [];
     let temp;
     let level = false;
-   
+
     q.push(str);
     visit.add(str);
-    while (q.length!=0)
-    {
+    while (q.length != 0) {
         str = q.shift();
-        if (isValidString(str))
-        {
+        if (isValidString(str)) {
             res.push(str)
             level = true;
         }
         if (level)
             continue;
-        for (let i = 0; i < str.length; i++)
-        {
+        for (let i = 0; i < str.length; i++) {
             if (!isParenthesis(str[i]))
                 continue;
-   
+
             temp = str.substring(0, i) + str.substring(i + 1);
-            if (!visit.has(temp))
-            {
+            if (!visit.has(temp)) {
                 q.push(temp);
                 visit.add(temp);
             }
         }
     }
     return res;
+}
+
+// Total Ways to Sum
+
+function totalWaysToSum(N) {
+    let K = N;
+
+    let dp = Array.from({ length: N + 1 }, (_, i) => 0);
+    dp[0] = 1;
+
+    for (let row = 1; row < K + 1; row++) {
+        for (let col = 1; col < N + 1; col++) {
+            if (col >= row) {
+                dp[col] = dp[col] + dp[col - row];
+            }
+        }
+    }
+    return (dp[N] - 1);
 }
