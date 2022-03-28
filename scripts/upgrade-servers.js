@@ -24,9 +24,9 @@ export async function main(_ns) {
     let built = 0;
     let maxRam = ns.getPurchasedServerMaxRam();
     let serverCost = ns.getPurchasedServerCost(maxRam);
-    for (let i = currentServerCount; i < serverLimit; ++i) {                
-        if(data["wait"]){
-            while(ns.getServerMoneyAvailable("home") < serverCost){
+    for (let i = currentServerCount; i < serverLimit; ++i) {
+        if (data["wait"]) {
+            while (ns.getServerMoneyAvailable("home") < serverCost) {
                 ns.tprintf("Need more money! Sleeping 60 seconds.")
                 await ns.sleep(60000)
             }
