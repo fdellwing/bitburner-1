@@ -8,7 +8,7 @@ export async function main(_ns) {
         ns.tprint("hostname to find required as an argument!");
         return;
     }
-
+    ns.comm
     var target = ns.args[0];
     var maxServerMoney = ns.getServerMaxMoney(target);
     var growThreshold = maxServerMoney * 0.95;
