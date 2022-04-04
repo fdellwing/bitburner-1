@@ -122,11 +122,11 @@ function checkForLocalPrograms() {
         canSqlInject = true;
     }
     ns.printf("Attacks: %d", portAttackCount);
-    ns.print("canBruteSsh: ", canBruteSsh);
-    ns.print("canFtpCrack: ", canFtpCrack);
-    ns.print("canRelaySmtp: ", canRelaySmtp);
-    ns.print("canHttpWorm: ", canHttpWorm);
-    ns.print("canSqlInject: ", canSqlInject);
+    ns.print("canBruteSsh: " + canBruteSsh);
+    ns.print("canFtpCrack: " + canFtpCrack);
+    ns.print("canRelaySmtp: " + canRelaySmtp);
+    ns.print("canHttpWorm: " + canHttpWorm);
+    ns.print("canSqlInject: " + canSqlInject);
 }
 
 async function fuckupCurrentTarget() {

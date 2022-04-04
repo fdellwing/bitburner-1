@@ -20,7 +20,7 @@ export async function main(ns) {
 
     while (true) {
         await ns.sleep(timeout); // Wait it out first
-        //if (ns.isBusy()) continue;
+        if (ns.isBusy()) continue;
         /** Calculate the risk value of all crimes */
         let choices = crimes.map((crime) => {
             let crimeStats = ns.getCrimeStats(crime); // Let us look at the important bits

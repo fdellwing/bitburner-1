@@ -47,7 +47,11 @@ function getServerObjects(nodes) {
 
 // attack a server
 function attack(server, remainingThreads) {
-    let hackThreads = parseInt(.10 / ns.hackAnalyze(server)) + 1;
+    let hackalyze = ns.hackAnalyze(server);
+    let hackThreads = 1;
+    if (hackalyze > 0){
+        hackThreads = parseInt(.10 / ns.hackAnalyze(server)) + 1;
+    }
     let growThreads = parseInt(ns.growthAnalyze(server, 4)) + 1;
     let weakenThreads = hackThreads * 2;
 
@@ -57,9 +61,10 @@ function attack(server, remainingThreads) {
         growThreads = parseInt((growThreads / total) * remainingThreads);
         weakenThreads = remainingThreads - (hackThreads + growThreads);
     }
+    let id = Date.now();
     ns.tprintf("Attacking %s with %d hack; %d grow; %d weaken threads.", server, hackThreads, growThreads, weakenThreads);
-    ns.exec("infinity-hack.js", "home", hackThreads, "--target", server);
-    ns.exec("infinity-grow.js", "home", growThreads, "--target", server);
-    ns.exec("infinity-weaken.js", "home", weakenThreads, "--target", server);
+    ns.exec("infinity-hack.js", "home", hackThreads, "--target", server, "--id", id);
+    ns.exec("infinity-grow.js", "home", growThreads, "--target", server, "--id", id);
+    ns.exec("infinity-weaken.js", "home", weakenThreads, "--target", server, "--id", id);
     return hackThreads + growThreads + weakenThreads;
 }
