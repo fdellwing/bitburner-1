@@ -25,14 +25,22 @@ let ns = null;
 export async function main(_ns) {
     ns = _ns;
     let portAttackCount = checkForLocalPrograms();
-    let servers = getAllServers(ns, "home");
+    let servers = getAllServers(ns, "home", true);
     const myHackLevel = ns.getHackingLevel();
     ns.printf("My hack level: %d", myHackLevel);
     let workNodes = [];
     let targets = [];
     for (let server of servers) {
+        if(server=="home"){
+            continue;
+        }
         // 
         let node = ns.getServer(server);
+        if(node.purchasedByPlayer){
+            workNodes.push(node);
+            ns.tprintf("%s is player owned", node.hostname);
+            continue;
+        }
         let workable = false;
         let hackable = false;            
         if (node.hasAdminRights || portAttackCount >= node.numOpenPortsRequired) {

@@ -23,7 +23,8 @@ export async function main(ns) {
         if (ns.isBusy()) continue;
         /** Calculate the risk value of all crimes */
         let choices = crimes.map((crime) => {
-            let crimeStats = ns.getCrimeStats(crime); // Let us look at the important bits
+            let p = ns.getPlayer();            
+            let crimeStats = ns.getCrimeStats(crime); // Let us look at the important bits            
             let crimeChance = ns.getCrimeChance(crime); // We need to calculate if its worth it
             /** Using probabilty(odds) to calculate the "risk" to get the best reward
              *      Risk Value = Money Earned * Odds of Success(P(A) / ~P(A)) / Time taken

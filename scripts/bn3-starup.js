@@ -3,6 +3,8 @@ BN3 is a shit bitnode that can't be started up like the rest. For this one we si
 need something to start rolling up the hack number. There is barely a reason to 
 hack because we get very little from it, but to finish the bitnode you have to install
 the backdoor, and to do that you need a big hack number in this bitnode. 
+
+
 */
 /** @type import(".").NS */
 let ns = null;
@@ -11,7 +13,7 @@ let ns = null;
 export async function main(_ns) {
     ns = _ns;    
     await IntitialAttack();
-        
+
 }
 
 
