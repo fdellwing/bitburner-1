@@ -107,9 +107,9 @@ export async function main(_ns) {
         id = Date.now();
     }
     ns.tprintf("Attacking %s with %d hack; %d grow; %d weaken threads.", server, hackThreads, growThreads, weakenThreads);
-    ns.exec("infinity-hack.js", "home", hackThreads, "--target", server, "--id", id);
-    ns.exec("infinity-grow.js", "home", growThreads, "--target", server, "--id", id);
-    ns.exec("infinity-weaken.js", "home", weakenThreads, "--target", server, "--id", id);
+    ns.exec(HACK_SCRIPT, "home", hackThreads, "--target", server, "--id", id);
+    ns.exec(GROW_SCRIPT, "home", growThreads, "--target", server, "--id", id);
+    ns.exec(WEAKEN_SCRIPT, "home", weakenThreads, "--target", server, "--id", id);
 }
 
 // nuke the host for root access
