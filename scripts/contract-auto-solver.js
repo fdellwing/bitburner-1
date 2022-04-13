@@ -1,12 +1,41 @@
-import { getAllServers } from "get-servers.js";
-
+/**
+ * Script: contract-auto-solver.js
+ * 
+ * Description:
+ *  A script that automatically scans all servers for contracts and attempts
+ *  to solve them. There are solutions for the following contract types:
+ *          
+ *      Algorithmic Stock Trader I
+ *      Algorithmic Stock Trader II
+ *      Algorithmic Stock Trader III
+ *      Algorithmic Stock Trader IV
+ *      Array Jumping Game
+ *      Array Jumping Game II
+ *      Find All Valid Math Expressions
+ *      Find Largest Prime Factor
+ *      Generate IP Addresses
+ *      Merge Overlapping Intervals
+ *      Minimum Path Sum in a Triangle
+ *      Sanitize Parentheses in Expression
+ *      Spiralize Matrix
+ *      Subarray with Maximum Sum
+ *      Total Ways to Sum
+ *      Unique Paths in a Grid I
+ *      Unique Paths in a Grid II
+ * 
+ * Args: None
+ * 
+ * @param {import(".").NS} ns - The nestcript instance passed to main entry point
+ */
 export function main(ns) {
-    const contracts = getAllServers(ns, "home").flatMap((server) => {
+    ns.disableLog("ALL")
+    const contracts = getAllServers(ns).flatMap((server) => {
         const onServer = ns.ls(server, ".cct").map((contract) => {
             const type = ns.codingcontract.getContractType(contract, server);
             const data = ns.codingcontract.getData(contract, server);
             const didSolve = solve(type, data, server, contract, ns);
-            return `${server} - ${contract} - ${type} - ${didSolve || "FAILED!"}`;
+            const result = didSolve ? "COMPLETE!" : "FAILED!";
+            return `${server} - ${contract} - ${type} - ${result}`;
         });
         return onServer;
     });
@@ -14,9 +43,23 @@ export function main(ns) {
     contracts.forEach((contract) => void ns.tprint(contract));
 }
 
+// return list of all servers, not belonging to player
+function getAllServers(ns) {
+    let pendingScan = ["home"]
+    const list = new Set(pendingScan)
+    while (pendingScan.length) {
+        const hostname = pendingScan.shift()
+        if (!ns.getServer(hostname).purchasedByPlayer) {
+            list.add(hostname)
+        }
+        pendingScan.push(...ns.scan(hostname))
+        pendingScan = pendingScan.filter(host => !list.has(host))
+    }
+    return [...list]
+}
+
 function solve(type, data, server, contract, ns) {
     let solution = "";
-    ns.tprint(type);
     switch (type) {
         case "Algorithmic Stock Trader I":
             solution = maxProfit([1, data]);
@@ -57,6 +100,9 @@ function solve(type, data, server, contract, ns) {
         case "Array Jumping Game":
             solution = solveArrayJumpingGame(data, 0);
             break;
+        case "Array Jumping Game II":
+            solution = solveArrayJumpingGameII(data);
+            break;
         case "Subarray with Maximum Sum":
             solution = subarrayMaxSum(data);
             break;
@@ -67,11 +113,11 @@ function solve(type, data, server, contract, ns) {
             solution = totalWaysToSum(data);
             break;
         default:
-            ns.tprintf("Type '%s' has no solving function.", type);
+            ns.tprintf("ERROR: Contract type '%s' has no solving function.", type);
             solution = "$FUCKMEINTHEGOATASS!"
             break;
     }
-    return ("$FUCKMEINTHEGOATASS!" != solution) ? ns.codingcontract.attempt(solution, contract, server, [true]) : "";
+    return ("$FUCKMEINTHEGOATASS!" != solution) ? ns.codingcontract.attempt(solution, contract, server, [true]) : false;
 }
 
 //ALGORITHMIC STOCK TRADER
@@ -82,7 +128,6 @@ function maxProfit(arrayData) {
     let maxTrades = arrayData[0];
     let stockPrices = arrayData[1];
 
-    // WHY?
     let tempStr = "[0";
     for (i = 0; i < stockPrices.length; i++) {
         tempStr += ",0";
@@ -343,18 +388,36 @@ function solveArrayJumpingGame(a, i) {
     if (l == 0) return 0; // empty array, WTF?
     if (i >= l) return 0; // past end of array
     if (i == l - 1) {
-        //ns.tprintf("a[%d] = %d", i, a[i])
         return 1; // The end has been reached.    
 
     }
     var k = a[i];
     for (let j = 1; j <= k; ++j) {
         if (solveArrayJumpingGame(a, i + j)) {
-            //ns.tprintf("a[%d] = %d; j = %d", i, a[i], j)
             return 1;
         }
     }
     return 0;
+}
+
+
+function solveArrayJumpingGameII(a, i = 0, jumpCount = 0) {
+    // A slightly different take on the problem, but the solution is similar
+    let l = a.length;
+    if (l == 0) return 0; // empty array, WTF?
+    if (i >= l) return 0; // past end of array
+    if (i == l - 1) {
+        return jumpCount; // The end has been reached.    
+    }
+    let minJumpCount = 0;
+    let k = a[i];
+    for (let j = 1; j <= k; ++j) {
+        var jc = solveArrayJumpingGameII(a, i + j, jumpCount + 1);
+        if (jc > 0 && (minJumpCount == 0 || jc < minJumpCount)) {
+            minJumpCount = jc;
+        }
+    }
+    return minJumpCount;
 }
 
 // Subarray with Maximum Sum
