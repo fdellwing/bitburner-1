@@ -1,10 +1,12 @@
 /** @type import(".").NS */
 let ns = null;
-
+const argsSchema = [
+    ["help", false],    
+];
 /** @param {NS} _ns **/
 export async function main(_ns) {
-    ns = _ns;    
-    const args = ns.flags([["help", false]]);
+    ns = _ns;        
+    const args = ns.flags(argsSchema);
     let route = [];
     let server = args._[0];
     if (!server || args.help) {
@@ -19,11 +21,12 @@ export async function main(_ns) {
     let jump = 0;
     for (const i in route) {
         jump++;
-        await ns.sleep(500);
+        await ns.sleep(250);
         const extra = i > 0 ? "└ " : "";
         ns.tprint(`${" ".repeat(i)}${extra}[${jump}] ${route[i]}`);
         ns.connect(route[i]);    
     }
+    
 }
 
 function recursiveScan(parent, server, target, route) {

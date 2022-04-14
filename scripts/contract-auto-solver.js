@@ -22,6 +22,7 @@
  *      Spiralize Matrix
  *      Subarray with Maximum Sum
  *      Total Ways to Sum
+ *      Total Ways to Sum II
  *      Unique Paths in a Grid I
  *      Unique Paths in a Grid II
  * 
@@ -113,6 +114,9 @@ function solve(type, data, server, contract, ns) {
             break;
         case "Total Ways to Sum":
             solution = totalWaysToSum(data);
+            break;
+        case "Total Ways to Sum II":
+            solution = totalWaysToSumII(data);
             break;
         case "HammingCodes: Encoded Binary to Integer":
             solution = solveHammingDecodeContract(data);
@@ -507,20 +511,34 @@ function sanitizeParentheses(str) {
 
 // Total Ways to Sum
 
-function totalWaysToSum(N) {
-    let K = N;
+function totalWaysToSum(data) {
+    let k = data;
 
-    let dp = Array.from({ length: N + 1 }, (_, i) => 0);
+    let dp = Array.from({ length: data + 1 }, (_, i) => 0);
     dp[0] = 1;
 
-    for (let row = 1; row < K + 1; row++) {
-        for (let col = 1; col < N + 1; col++) {
+    for (let row = 1; row < k + 1; row++) {
+        for (let col = 1; col < data + 1; col++) {
             if (col >= row) {
                 dp[col] = dp[col] + dp[col - row];
             }
         }
     }
-    return (dp[N] - 1);
+    return (dp[data] - 1);
+}
+
+function totalWaysToSumII(data){
+    const n = data[0];
+    const s = data[1];
+    const ways = [1];
+    ways.length = n + 1;
+    ways.fill(0, 1);
+    for (let i = 0; i < s.length; i++) {
+      for (let j = s[i]; j <= n; j++) {
+        ways[j] += ways[j - s[i]];
+      }
+    }
+    return ways[n];
 }
 
 // HammingCodes

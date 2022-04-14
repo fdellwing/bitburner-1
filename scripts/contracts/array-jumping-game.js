@@ -1,4 +1,4 @@
-/** @type import(".").NS */
+/** @type import("..").NS */
 let ns = null;
 
 /** @param {NS} _ns **/
@@ -18,7 +18,7 @@ function solveArrayJumpingGame(a, i) {
         //ns.tprintf("a[%d] = %d", i, a[i])
         return 1; // The end has been reached.    
         
-    }
+    }    
     var k = a[i];
     for (let j = 1; j <= k; ++j) {
         if (solveArrayJumpingGame(a, i + j)) {
