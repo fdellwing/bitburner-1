@@ -14,6 +14,8 @@
  *      Find All Valid Math Expressions
  *      Find Largest Prime Factor
  *      Generate IP Addresses
+ *      HammingCodes: Encoded Binary to Integer
+ *      HammingCodes: Integer to encoded Binary
  *      Merge Overlapping Intervals
  *      Minimum Path Sum in a Triangle
  *      Sanitize Parentheses in Expression
@@ -111,6 +113,12 @@ function solve(type, data, server, contract, ns) {
             break;
         case "Total Ways to Sum":
             solution = totalWaysToSum(data);
+            break;
+        case "HammingCodes: Encoded Binary to Integer":
+            solution = solveHammingDecodeContract(data);
+            break;
+        case "HammingCodes: Integer to encoded Binary":
+            solution = HammingEncode(data);
             break;
         default:
             ns.tprintf("ERROR: Contract type '%s' has no solving function.", type);
@@ -513,4 +521,89 @@ function totalWaysToSum(N) {
         }
     }
     return (dp[N] - 1);
+}
+
+// HammingCodes
+
+export function HammingEncode(value) {
+    function HammingSumOfParity(lengthOfDBits) {
+        return lengthOfDBits < 3 || lengthOfDBits == 0
+            ? lengthOfDBits == 0
+                ? 0
+                : lengthOfDBits + 1
+            :
+            Math.ceil(Math.log2(lengthOfDBits * 2)) <=
+                Math.ceil(Math.log2(1 + lengthOfDBits + Math.ceil(Math.log2(lengthOfDBits))))
+                ? Math.ceil(Math.log2(lengthOfDBits) + 1)
+                : Math.ceil(Math.log2(lengthOfDBits));
+    }
+    const data = parseInt(value).toString(2).split("");
+    const sumParity = HammingSumOfParity(data.length);
+    const count = (arr, val) => arr.reduce((a, v) => (v === val ? a + 1 : a), 0);
+    const build = ["x", "x", ...data.splice(0, 1)];
+    for (let i = 2; i < sumParity; i++) {
+        build.push("x", ...data.splice(0, Math.pow(2, i) - 1));
+    }
+    for (const index of build.reduce(function (a, e, i) {
+        if (e == "x")
+            a.push(i);
+        return a;
+    }, [])) {
+
+        const tempcount = index + 1;
+        const temparray = [];
+        const tempdata = [...build];
+        while (tempdata[index] !== undefined) {
+            const temp = tempdata.splice(index, tempcount * 2);
+            temparray.push(...temp.splice(0, tempcount));
+        }
+        temparray.splice(0, 1);
+        build[index] = (count(temparray, "1") % 2).toString();
+    }
+    build.unshift((count(build, "1") % 2).toString());
+    return build.join("");
+}
+
+export function HammingDecode(data) {
+    const build = data.split("");
+    const testArray = [];
+    const sumParity = Math.ceil(Math.log2(data.length));
+    const count = (arr, val) => arr.reduce((a, v) => (v === val ? a + 1 : a), 0);
+    let overallParity = build.splice(0, 1).join("");
+    testArray.push(overallParity == (count(build, "1") % 2).toString() ? true : false);
+    for (let i = 0; i < sumParity; i++) {
+        const tempIndex = Math.pow(2, i) - 1;
+        const tempStep = tempIndex + 1;
+        const tempData = [...build];
+        const tempArray = [];
+        while (tempData[tempIndex] != undefined) {
+            const temp = [...tempData.splice(tempIndex, tempStep * 2)];
+            tempArray.push(...temp.splice(0, tempStep));
+        }
+        const tempParity = tempArray.shift();
+        testArray.push(tempParity == (count(tempArray, "1") % 2).toString() ? true : false);
+    }
+    let fixIndex = 0;
+    for (let i = 1; i < sumParity + 1; i++) {
+        fixIndex += testArray[i] ? 0 : Math.pow(2, i) / 2;
+    }
+    build.unshift(overallParity);
+    if (fixIndex > 0 && testArray[0] == false) {
+        build[fixIndex] = build[fixIndex] == "0" ? "1" : "0";
+    }
+    else if (testArray[0] == false) {
+        overallParity = overallParity == "0" ? "1" : "0";
+    }
+    else if (testArray[0] == true && testArray.some((truth) => truth == false)) {
+        return 0;
+    }
+    for (let i = sumParity; i >= 0; i--) {
+        build.splice(Math.pow(2, i), 1);
+    }
+    build.splice(0, 1);
+    return parseInt(build.join(""), 2);
+}
+
+function solveHammingDecodeContract(data) {
+    return `${HammingDecode(data)}`;
 }

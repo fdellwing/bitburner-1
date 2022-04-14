@@ -31,10 +31,12 @@ export async function main(ns) {
     }
 
     recursiveScan(ns, '', 'home', server, route);
+    let jump = 0;
     for (const i in route) {
+        jump++;
         await ns.sleep(500);
         const extra = i > 0 ? "└ " : "";
-        ns.tprint(`${" ".repeat(i)}${extra}${route[i]}`);
+        ns.tprint(`${" ".repeat(i)}${extra}[${jump}] ${route[i]}`);
     }
 }
 

@@ -42,7 +42,7 @@ export async function main(_ns) {
     if (!node.hasAdminRights) {
         // Need admin rights, can Nuke?
         let portAttackCount = checkForLocalPrograms();
-        if (portAttackCount < node.numOpenPortsRequired) {
+        if (portAttackCount >= node.numOpenPortsRequired) {
             nukeHost(node.hostname);
         } else {
             ns.tprintf("ERROR: %s requires %d ports open to nuke, you can only open %d", node.hostname, node.numOpenPortsRequired, portAttackCount);
@@ -57,7 +57,7 @@ export async function main(_ns) {
     let availableRam = ns.getServerMaxRam("home") - ns.getServerUsedRam("home");
     const threadsAvailable = parseInt(availableRam / scriptMemoryRequired);
     if(threadsAvailable < 3){
-        ns.tprintf("ERROR: Not enough memory availabl to attack %s", server);
+        ns.tprintf("ERROR: Not enough memory available to attack %s", server);
         ns.exit();
         return;
     }    
