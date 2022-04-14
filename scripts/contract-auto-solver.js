@@ -525,7 +525,7 @@ function totalWaysToSum(N) {
 
 // HammingCodes
 
-export function HammingEncode(value) {
+function HammingEncode(value) {
     function HammingSumOfParity(lengthOfDBits) {
         return lengthOfDBits < 3 || lengthOfDBits == 0
             ? lengthOfDBits == 0
@@ -564,7 +564,7 @@ export function HammingEncode(value) {
     return build.join("");
 }
 
-export function HammingDecode(data) {
+function HammingDecode(data) {
     const build = data.split("");
     const testArray = [];
     const sumParity = Math.ceil(Math.log2(data.length));
