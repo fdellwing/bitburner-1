@@ -39,11 +39,12 @@ export function main(ns) {
             const data = ns.codingcontract.getData(contract, server);
             const didSolve = solve(type, data, server, contract, ns);
             const result = didSolve ? "COMPLETE!" : "FAILED!";
-            return `${server} - ${contract} - ${type} - ${result}`;
+            const logType = didSolve ? "SUCCESS:" : "WARN:";
+            return `${logType} ${server} - ${contract} - ${type} - ${result}`;
         });
         return onServer;
     });
-    ns.tprint(`Found ${contracts.length} contracts`);
+    ns.tprint(`INFO: Found ${contracts.length} contracts`);
     contracts.forEach((contract) => void ns.tprint(contract));
 }
 
