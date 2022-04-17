@@ -60,7 +60,7 @@ export async function main(_ns) {
             isKillingTime = true;
             ns.toast("It's killing time!")
         }
-
+                
         commitCrime(bestCrime[0]);
     }
 }
