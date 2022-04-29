@@ -1,7 +1,18 @@
-/** @param {NS} ns **/
-export async function main(ns) {
+/** @type import(".").NS */
+let ns = null;
+
+// list of companies paired with location
+const companies = {
+    "Four Sigma": "Sector-12",
+    "Blade Industries" : "Sector-12",
+    "MegaCorp": "Sector-12"
+}
+
+export async function main(_ns) {
+    ns = _ns;
+    ns.get
     
-    //sets parameters for the script,
+    // sets parameters for the script
     var invites = ns.checkFactionInvitations() // what invites we have,
     var completed = []; // companies we have accepted invites from,
     var busy = ns.isBusy() //whether we're currently working,

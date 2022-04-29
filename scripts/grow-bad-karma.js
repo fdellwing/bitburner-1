@@ -4,10 +4,6 @@
  * until we commit 18k murders, then quit. 
  */
 const crimes = [
-    "heist",
-    "assassination",
-    "kidnap",
-    "grand theft auto",
     "homicide",
     "larceny",
     "mug someone",

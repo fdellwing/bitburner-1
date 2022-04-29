@@ -9,7 +9,7 @@ const timeout = 250;
 
 /** @param {NS} _ns **/
 export async function main(_ns) {    
-    ns = _ns;    
+    ns = _ns;        
     let hackLevel = ns.getHackingLevel();
     let lastRestartLevel = 0;
     if(!remote_spinup)

@@ -18,12 +18,25 @@ let canFtpCrack = false;
 let canRelaySmtp = false;
 let canHttpWorm = false;
 let canSqlInject = false;
+
+const argsSchema = [
+    ["h", false],           // include hacknet servers
+    ["help", false],        // Print a friendly help message
+    ["p", false]            // Include personal servers
+];
+
+
 /** @type import(".").NS */
 let ns = null;
 
 /** @param {NS} _ns **/
 export async function main(_ns) {
+
     ns = _ns;
+    ns.disableLog("ALL");
+    let options = ns.flags(argsSchema);
+    const includeHashnet = options.h;
+    const includePersonal = options.p;
     let portAttackCount = checkForLocalPrograms();
     let servers = getAllServers(ns, "home", true);
     const myHackLevel = ns.getHackingLevel();
@@ -31,14 +44,28 @@ export async function main(_ns) {
     let workNodes = [];
     let targets = [];
     for (let server of servers) {
-        if(server=="home"){
+        if(server==="home"){
             continue;
         }
         // 
         let node = ns.getServer(server);
         if(node.purchasedByPlayer){
-            workNodes.push(node);
             ns.tprintf("%s is player owned", node.hostname);
+            if(server.startsWith("hacknet")){
+                if(includeHashnet){
+                    workNodes.push(node);
+                }
+                else{
+                    ns.tprintf("ignoring %s", server);
+                }
+            } else {
+                if(includePersonal){
+                    workNodes.push(node);
+                }
+                else{
+                    ns.tprintf("ignoring %s", server);
+                }
+            }
             continue;
         }
         let workable = false;
