@@ -1,6 +1,12 @@
 /** @type import(".").NS */
 let ns = null;
 
+const argsSchema = [
+    ["c", false]
+    ["defaulttask", ""]
+]
+
+const FACTION_NAME = "Slum Snakes";
 const TASK_TRAIN = "Train Combat";
 const TASK_VIGI = "Vigilante Justice";
 const TASK_NOOB = String.fromCharCode(77) + "ug People";
@@ -35,6 +41,14 @@ const LAST_NAMES = ["Johnson", "Nelson", "Rodriguez", "Jefferson", "Washington",
 export async function main(_ns) {
     ns = _ns;
     const gang = ns.gang;
+
+    function createGang(){
+        if(gang.createGang(FACTION_NAME)){
+            ns.toast("Gang created!","success")           
+        } else {
+            ns.tprintf("ERROR: unable to create new gang!");
+        }
+    }
     // Get weighted stats sum (at this moment, sum of combat stats in eq proportions) 
     function getStatsSum(member) {
         const info = gang.getMemberInformation(member);
@@ -74,8 +88,12 @@ export async function main(_ns) {
     }
     // The script accepts argument for default task override (optional)
     let defaultTask = null;
-    if (ns.args[0] && gang.getTaskNames().includes(ns.args[0])) {
-        defaultTask = ns.args[0];
+    let options = ns.flags(argsSchema);
+    if(options.c){
+        createGang();
+    }
+    if (gang.getTaskNames().includes(options.defaulttask)) {
+        defaultTask = options.defaulttask;
     }
     // Main loop
     for (; ;) {

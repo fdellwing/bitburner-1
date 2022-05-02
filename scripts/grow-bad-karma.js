@@ -1,7 +1,8 @@
 /*
  * The idea behin this script is start commiting crimes, starting with the easiest
  * and progressing to homicide. Once we start commiting homicides we kill people 
- * until we commit 18k murders, then quit. 
+ * until we have enough negative karma, then launch the manage-combat-gang.js 
+ * script with the -c flag to create a new gang. 
  */
 const crimes = [
     "homicide",
@@ -14,6 +15,7 @@ let murders = 0;
 let crimesCommitted = 0;
 /** @type import(".").NS */
 let ns = null;
+const GANG_THRESHOLD = -54000;
 
 /** @param {import(".").NS } ns */
 export async function main(_ns) {
@@ -28,23 +30,16 @@ export async function main(_ns) {
     while (true) {
         await ns.sleep(timeout); // Wait it out first
         if (ns.isBusy()) continue;
-        if(isKillingTime){
+        if (isKillingTime) {
             commitCrime("homicide");
             continue;
         }
-        /** Calculate the risk value of all crimes */
+        // Calculate the risk value of all crimes 
         let choices = crimes.map((crime) => {
-            let p = ns.getPlayer();            
+            let p = ns.getPlayer();
             let crimeStats = ns.getCrimeStats(crime); // Let us look at the important bits            
             let crimeChance = ns.getCrimeChance(crime); // We need to calculate if its worth it            
-            /** Using probabilty(odds) to calculate the "risk" to get the best reward
-             *      Risk Value = Money Earned * Odds of Success(P(A) / ~P(A)) / Time taken
-             *
-             *  Larger risk values indicate a better choice
-             */
-            let crimeRiskValue =
-                (crimeStats.money * Math.log10(crimeChance / (1 - crimeChance + Number.EPSILON))) /
-                crimeStats.time;
+            let crimeRiskValue = (crimeStats.money * Math.log10(crimeChance / (1 - crimeChance + Number.EPSILON))) / crimeStats.time;
             return [crime, crimeRiskValue];
         });
 
@@ -52,32 +47,40 @@ export async function main(_ns) {
             return prev[1] > current[1] ? prev : current;
         });
 
-        if(ns.getCrimeChance("homicide")==1 || bestCrime[0]=="homicide"){            
+        if (ns.getCrimeChance("homicide") == 1 || bestCrime[0] == "homicide") {
             isKillingTime = true;
             ns.toast("It's killing time!")
         }
-                
-        commitCrime(bestCrime[0]);
+
+        let karma = commitCrime(bestCrime[0]);
+        if (karma < GANG_THRESHOLD) {
+            ns.printf("SUCCESS: Starting combat gang management script!");
+            ns.spawn("manage-combat-gang.js", 1, "-c");
+        }
     }
 }
 
-function commitCrime(crime){
+function commitCrime(crime) {
     ns.commitCrime(crime);
     crimesCommitted++;
-    if(crime=="homicide"){
+    if (crime == "homicide") {
         murders++;
     }
     let stats = ns.getCrimeStats(crime);
     let player = ns.getPlayer();
     ns.clearLog();
-    if(crime!="homicide"){
-        let ch  =ns.getCrimeChance("homicide");
+    ns.tail(); // just in case we accidentally close the window. We can only kill the script from the tail window.
+    if (crime != "homicide") {
+        let ch = ns.getCrimeChance("homicide");
         ns.printf("Murder chance: %f", ch);
     }
+    let karma = ns.heart.break();
     ns.printf("Crimes comitted this session: %d", crimesCommitted);
     ns.printf("Murders this session: %d", murders);
     ns.printf("Kills: %d", player.numPeopleKilled);
+    ns.printf("Karma: %d", karma);
     ns.print(
         `Crime: ${crime} Cash to Earn: \$${stats.money.toPrecision(4)}`
-    );    
+    );
+    return karma;
 }

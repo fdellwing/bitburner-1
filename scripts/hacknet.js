@@ -1,11 +1,15 @@
 /*
  * hacknet.js
- * Author: Adam Adair
+ * Author: KodeMonkey
  * Description: Some useful functions for managing a hacknet
  *
- * Required Source Files: 9.1, 4.1
+ * Required Source Files: 9.1
  *
+ * TODO: 
+ *  - Bounds checking on grow arguments
+ *  - Source file requirements validation 
  */
+
 import { log, formatMoney } from "helpers.js";
 
 /** @type import(".").NS */
@@ -25,13 +29,13 @@ const argsSchema = [
     ["c", false],           // Continuous sell
     ["continuous", false],  // Continuous sell
     ["contracts", false],   // Buy up the contracts
-    ["cores", 8],           // Number of cores for grow
+    ["cores", 16],          // Number of cores for grow
     ["corp", false],        // Do corporation upgrades
     ["grow", 0],            // Number of nodes for grow
     ["help", false],        // Print a friendly help message
     ["levels", 64],         // Number of levels for grow
     ["personal", false],    // personal improvement upgrades
-    ["ram", 64],            // Amount of RAM for grow
+    ["ram", 128],           // Amount of RAM for grow
     ["sell", 0],            // Sell a number of hashes
     ["sell-all", false]     // Sell all hashes
 ];
@@ -68,17 +72,20 @@ export async function main(_ns) {
         return;
     }
 
-    if(options.corp){
+    if (options.corp) {
+        ns.tail();
         await doCorporateUpgrades();
         return;
     }
 
-    if(options.contracts){
+    if (options.contracts) {
+        ns.tail();
         await doCodingContracts();
         return;
     }
 
-    if(options.personal){
+    if (options.personal) {
+        ns.tail();
         await doPersonalImprovements();
         return;
     }
@@ -94,9 +101,10 @@ export async function main(_ns) {
         await growHacknet(nodes, levels, ram, cores, cache);
     }
 
-    if(options.bb){
+    if (options.bb) {
+        ns.tail();
         await doBladeburnerUpgrades();
-        log(ns,"Now starting continuous sell");
+        log(ns, "Now starting continuous sell");
         await continuousSell();
     }
 
@@ -109,23 +117,24 @@ export async function main(_ns) {
 
 // print a helpful message to terminal
 function help() {
-    ns.tprint("This script helps manage your hacknet servers.");
-    ns.tprint(`USAGE: run ${ns.getScriptName()} [argument]`);
-    ns.tprint("arguments:");
-    ns.tprint("--bb       : max out bladeburner upgrades");
-    ns.tprint("--cache n  : grow to n cache for each server");
-    ns.tprint("-c, --continuous : continuous sell loop");
-    ns.tprint("--contracts : generate coding contracts");
-    ns.tprint("--corp : generate corporate upgrades");
-    ns.tprint("--grow n   : grow n hacknet servers");
-    ns.tprint("--help     : print this help message");
-    ns.tprint("--personal : generate personal improvements for studying and working out");
-    ns.tprint("--sell n   : sell n hashes for money");
-    ns.tprint("--sell-all : sell all available hashes for money.");
-    ns.tprint("\nWhen using --grow there are additional arguments that can control the\ngrowth of the hacknet:");
-    ns.tprint("--cores n : number of cores where 1 <= n <= 16, default 16");
-    ns.tprint("--levels n : number of levels where 1 <= n <= 200; default 200");
-    ns.tprintf("--ram n : n is amount of ram, power of 2, MAX is 64; default 64");
+    ns.tprint(`This script helps manage your hacknet servers.
+USAGE: run ${ns.getScriptName()} [argument]
+arguments:
+--bb       : max out bladeburner upgrades
+-c, --continuous : continuous sell loop
+--contracts : generate coding contracts
+--corp      : generate corporate upgrades
+--grow n    : grow n hacknet servers
+--help      : print this help message
+--personal  : generate personal improvements for studying and working out
+--sell n    : sell n hashes for money
+--sell-all  : sell all available hashes for money.
+
+When using --grow there are additional arguments that can control the\ngrowth of the hacknet:
+--cache n   : grow to n cache for each server
+--cores n   : grow to n cores for each server, default 16
+--levels n  : number of levels where 1 <= n <= 200; default 64
+--ram n     : n is amount of ram, power of 2, default 64`);
 }
 
 // attempt to sell n hashes
@@ -266,36 +275,36 @@ async function growHacknet(nodeCount, levels, ram, cores, cache) {
     ns.toast("Hacknet growth complete!", "success");
 }
 
-async function doBladeburnerUpgrades(){
+async function doBladeburnerUpgrades() {
     let complete = false;
-    while(!complete){
+    while (!complete) {
 
         let rankHashCost = ns.hacknet.hashCost(EXCHANGE_FOR_BLADEBURNER_RANK);
         let rankSPCost = ns.hacknet.hashCost(EXCHANGE_FOR_BLADEBURNER_SP);
         let hashCapacity = ns.hacknet.hashCapacity();
-        if(rankHashCost > hashCapacity && rankSPCost > hashCapacity){
+        if (rankHashCost > hashCapacity && rankSPCost > hashCapacity) {
             // we have gone as far as we can
             complete = true;
             continue;
         }
         let numHashes = ns.hacknet.numHashes();
-        if(rankHashCost < numHashes){
-            if(ns.hacknet.spendHashes(EXCHANGE_FOR_BLADEBURNER_RANK)){
-                log(ns,`INFO: Exchanged ${rankHashCost} hashes for bladeburner rank`);
+        if (rankHashCost < numHashes) {
+            if (ns.hacknet.spendHashes(EXCHANGE_FOR_BLADEBURNER_RANK)) {
+                log(ns, `INFO: Exchanged ${rankHashCost} hashes for bladeburner rank`);
             } else {
-                log(ns, `ERROR: Failed to exchange hashes for bladeburner rank`,true);
+                log(ns, `ERROR: Failed to exchange hashes for bladeburner rank`, true);
             }
-        } else if(rankSPCost < numHashes){
-            if(ns.hacknet.spendHashes(EXCHANGE_FOR_BLADEBURNER_SP)){
-                log(ns,`INFO: Exchanged ${rankSPCost} hashes for bladeburner skill points`);
+        } else if (rankSPCost < numHashes) {
+            if (ns.hacknet.spendHashes(EXCHANGE_FOR_BLADEBURNER_SP)) {
+                log(ns, `INFO: Exchanged ${rankSPCost} hashes for bladeburner skill points`);
             } else {
-                log(ns, `ERROR: Failed to exchange hashes for bladeburner skill points`,true);
+                log(ns, `ERROR: Failed to exchange hashes for bladeburner skill points`, true);
             }
         } else {
             await ns.sleep(3000);
         }
     }
-    log(ns, "SUCCESS: Completed hacknet bladeburder upgrades", false,"success");
+    log(ns, "SUCCESS: Completed hacknet bladeburder upgrades", false, "success");
 }
 
 /**
@@ -303,25 +312,25 @@ async function doBladeburnerUpgrades(){
  * @param list
  * @returns {Promise<void>}
  */
-async function manageHashes(list){
+async function manageHashes(list) {
     let complete = false;
-    while(!complete){
+    while (!complete) {
         let hashCapacity = ns.hacknet.hashCapacity();
         let done = 0;
-        for(let item of list) {
+        for (let item of list) {
             let numHashes = ns.hacknet.numHashes();
             let itemHashCost = ns.hacknet.hashCost(item);
-            if(itemHashCost < numHashes){
-                if(ns.hacknet.spendHashes(item)){
+            if (itemHashCost < numHashes) {
+                if (ns.hacknet.spendHashes(item)) {
                     log(ns, `INFO: Exchanged ${itemHashCost} hashes to ${item}`)
                 } else {
                     log(ns, `ERROR: FAILED to exchange ${itemHashCost} hashes to ${item}`, true)
                 }
-            } else if (itemHashCost > hashCapacity){
+            } else if (itemHashCost > hashCapacity) {
                 done++;
             }
         }
-        if(done === list.length){
+        if (done === list.length) {
             complete = true;
             continue;
         }
@@ -329,20 +338,20 @@ async function manageHashes(list){
     }
 }
 
-async function doCorporateUpgrades(){
+async function doCorporateUpgrades() {
     let list = [SELL_FOR_CORPORATION_FUNDS, EXCHANGE_FOR_CORPORATION_RESEARCH];
     await manageHashes(list);
-    log(ns,"SUCCESS: Completed corporate upgrades!",false,"success");
+    log(ns, "SUCCESS: Completed corporate upgrades!", false, "success");
 }
 
-async function doCodingContracts(){
+async function doCodingContracts() {
     let list = [GENERATE_CODING_CONTRACT];
     await manageHashes(list);
-    log(ns,"SUCCESS: Completed generating coding contracts!",false,"success");
+    log(ns, "SUCCESS: Completed generating coding contracts!", false, "success");
 }
 
-async function doPersonalImprovements(){
-    let list = [IMPROVE_STUDYING,IMPROVE_GYM_TRAINING];
+async function doPersonalImprovements() {
+    let list = [IMPROVE_STUDYING, IMPROVE_GYM_TRAINING];
     await manageHashes(list);
-    log(ns,"SUCCESS: Completed personal improvements!",false,"success");
+    log(ns, "SUCCESS: Completed personal improvements!", false, "success");
 }
