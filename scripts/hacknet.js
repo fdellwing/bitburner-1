@@ -32,6 +32,7 @@ const argsSchema = [
     ["cores", 16],          // Number of cores for grow
     ["corp", false],        // Do corporation upgrades
     ["grow", 0],            // Number of nodes for grow
+    ["gym", false],         // only improve gym training
     ["help", false],        // Print a friendly help message
     ["levels", 64],         // Number of levels for grow
     ["personal", false],    // personal improvement upgrades
@@ -90,6 +91,12 @@ export async function main(_ns) {
         return;
     }
 
+    if(options.gym) {
+        ns.tail()
+        await doGymImprovements();
+        return;
+    }
+
 
     if (options.grow > 0) {
         ns.tprint("grow!");
@@ -125,6 +132,7 @@ arguments:
 --contracts : generate coding contracts
 --corp      : generate corporate upgrades
 --grow n    : grow n hacknet servers
+--gym       : only work on gym improvements
 --help      : print this help message
 --personal  : generate personal improvements for studying and working out
 --sell n    : sell n hashes for money
@@ -354,4 +362,10 @@ async function doPersonalImprovements() {
     let list = [IMPROVE_STUDYING, IMPROVE_GYM_TRAINING];
     await manageHashes(list);
     log(ns, "SUCCESS: Completed personal improvements!", false, "success");
+}
+
+async function doGymImprovements() {
+    let list = [IMPROVE_GYM_TRAINING];
+    await manageHashes(list);
+    log(ns, "SUCCESS: Completed gym improvements!", false, "success");
 }

@@ -2,7 +2,7 @@
 let ns = null;
 
 const argsSchema = [
-    ["c", false]
+    ["c", false],
     ["defaulttask", ""]
 ]
 
@@ -49,6 +49,7 @@ export async function main(_ns) {
             ns.tprintf("ERROR: unable to create new gang!");
         }
     }
+    
     // Get weighted stats sum (at this moment, sum of combat stats in eq proportions) 
     function getStatsSum(member) {
         const info = gang.getMemberInformation(member);
