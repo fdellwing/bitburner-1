@@ -17,6 +17,7 @@
  *      Generate IP Addresses
  *      HammingCodes: Encoded Binary to Integer
  *      HammingCodes: Integer to encoded Binary
+ *      HammingCodes: Integer to Encoded Binary
  *      Merge Overlapping Intervals
  *      Minimum Path Sum in a Triangle
  *      Proper 2-Coloring of a Graph
@@ -126,6 +127,9 @@ function solve(type, data, server, contract, ns) {
             solution = solveHammingDecodeContract(data);
             break;
         case "HammingCodes: Integer to encoded Binary":
+            solution = HammingEncode(data);
+            break;
+        case "HammingCodes: Integer to Encoded Binary":
             solution = HammingEncode(data);
             break;
         case "Shortest Path in a Grid":
