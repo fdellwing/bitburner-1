@@ -26,16 +26,15 @@ export async function main(_ns) {
         ns.tprint(`${" ".repeat(i)}${extra}[${jump}] ${route[i]}`);
         ns.connect(route[i]);    
     }
-    
 }
 
 function recursiveScan(parent, server, target, route) {
     const children = ns.scan(server);
     for (let child of children) {
-        if (parent == child) {
+        if (parent === child) {
             continue;
         }
-        if (child.toLowerCase() == target.toLowerCase()) {
+        if (child.toLowerCase() === target.toLowerCase()) {
             route.unshift(child);
             route.unshift(server);
             return true;

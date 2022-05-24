@@ -4,6 +4,7 @@
  * until we have enough negative karma, then launch the manage-combat-gang.js 
  * script with the -c flag to create a new gang. 
  */
+import { formatMoney } from "./helpers";
 const crimes = [
     "homicide",
     "larceny",
@@ -15,7 +16,7 @@ let murders = 0;
 let crimesCommitted = 0;
 /** @type import(".").NS */
 let ns = null;
-const GANG_THRESHOLD = -54000;
+const GANG_THRESHOLD = -1000000;
 
 /** @param {import(".").NS } _ns */
 export async function main(_ns) {
@@ -27,7 +28,8 @@ export async function main(_ns) {
     ns.tail(); // Open a window to view the status of the script
     let timeout = 250; // In ms - too low of a time will result in a lockout/hang
     let isKillingTime = false;
-    while (true) {
+    let run = true;
+    while (run) {
         await ns.sleep(timeout); // Wait it out first
         if (ns.isBusy()) continue;
         let theCrime = "homicide";
@@ -53,8 +55,8 @@ export async function main(_ns) {
         }
         let karma = commitCrime(theCrime);
         if (karma < GANG_THRESHOLD) {
-            ns.printf("SUCCESS: Starting combat gang management script!");
-            ns.spawn("manage-combat-gang.js", 1, "-c");
+            ns.printf("SUCCESS: killed a million!");
+            run = false;
         }
     }
 }
@@ -79,7 +81,7 @@ function commitCrime(crime) {
     ns.printf("Kills: %d", player.numPeopleKilled);
     ns.printf("Karma: %d", karma);
     ns.print(
-        `Crime: ${crime} Cash to Earn: \$${stats.money.toPrecision(4)}`
+        `Crime: ${crime} Cash to Earn: ${formatMoney(stats.money)}`
     );
     return karma;
 }

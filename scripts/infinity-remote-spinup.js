@@ -121,6 +121,7 @@ export async function main(_ns) {
                 break;
             }
         }
+        await ns.sleep(10);
     }
 }
 
@@ -156,13 +157,13 @@ function attack(server, target) {
             growThreads--;
         }        
     }
-    if(isNaN(hackThreads) || hackThreads == 0){
+    if(isNaN(hackThreads) || hackThreads === 0){
         hackThreads = 1;
     }
-    if(isNaN(growThreads) || growThreads == 0){
+    if(isNaN(growThreads) || growThreads === 0){
         growThreads = 1;
     }
-    if(isNaN(weakenThreads)|| weakenThreads == 0){
+    if(isNaN(weakenThreads)|| weakenThreads === 0){
         weakenThreads = 1;
     }
     let id = Date.now();

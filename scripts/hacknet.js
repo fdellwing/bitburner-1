@@ -269,6 +269,7 @@ async function growHacknet(nodeCount, levels, ram, cores, cache) {
                     log(ns, `ERROR: Cache upgrade for node ${action.index} failed!`);
                 }
             }
+            await ns.sleep(30);
         } else {
             if (!complete) {
                 await ns.sleep(3000);
