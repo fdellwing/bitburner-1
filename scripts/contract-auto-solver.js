@@ -1,3 +1,4 @@
+
 /**
  * Script: contract-auto-solver.js
  * 
@@ -822,7 +823,7 @@ function proper2ColoringOfAGraph(data){
                 colors[v] = color2;
                 queue.push(v);
             } else if (colors[v] === color1) {
-                return []; // invalid graph
+                return "[]"; // invalid graph, why string?
             }
         }
     }
