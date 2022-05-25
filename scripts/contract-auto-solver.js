@@ -12,6 +12,7 @@
  *      Algorithmic Stock Trader IV
  *      Array Jumping Game
  *      Array Jumping Game II
+ *      Compression I: RLE Compression
  *      Compression II: LZ Decompression
  *      Compression III: LZ Compression
  *      Find All Valid Math Expressions
@@ -129,6 +130,7 @@ function solve(type, data, server, contract, ns) {
             solution = solveHammingDecodeContract(data);
             break;
         case "HammingCodes: Integer to encoded Binary":
+            // left this here in case someone is still running the old version
             solution = HammingEncode(data);
             break;
         case "HammingCodes: Integer to Encoded Binary":
@@ -145,6 +147,9 @@ function solve(type, data, server, contract, ns) {
             break;
         case "Compression II: LZ Decompression":
             solution = decompressII(data);
+            break;
+        case "Compression I: RLE Compression":
+            solution = rleCompress(data);
             break;
         default:
             ns.tprintf("ERROR: Contract type '%s' has no solving function.", type);
@@ -976,4 +981,42 @@ function decompressII(data) {
         }
     }
     return plain;
+}
+
+// Compression I: RLE Compression
+
+function rleCompress(data) {
+    let response = "";
+    if (data === "") {
+        return response;
+    }
+
+    let currentRun = "";
+    let runLength = 0;
+
+    function addEncodedRun(char, length) {
+        while (length > 0) {
+            if (length >= 9) {
+                response += `9${char}`;
+            } else {
+                response += `${length}${char}`
+            }
+            length -= 9;
+        }
+    }
+
+    for (let c of data) {
+        if (currentRun === "") {
+            currentRun = c;
+            runLength = 1;
+        } else if (currentRun === c) {
+            runLength++;
+        } else if (currentRun !== c) {
+            addEncodedRun(currentRun, runLength);
+            currentRun = c;
+            runLength = 1;
+        }
+    }
+    addEncodedRun(currentRun, runLength);
+    return response;
 }
