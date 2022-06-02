@@ -5,6 +5,8 @@
     Description: 
     This program will display the players current karma value in the hud. When the
     program exits it will clean up after itself. 
+
+    test test test
 */
 /** @type import(".").NS */
 let ns = null;
