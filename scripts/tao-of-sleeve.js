@@ -168,7 +168,8 @@ function printHelp(){
 USAGE: run ${ns.getScriptName()} [argument]
 arguments:
 --calculate-money : Display available augmentations and money required to purchase
---help      : print this help message`);
+--help      : print this help message
+--purchase  : purchase all the augmentations we can with money available`);
 }
 
 /**
@@ -275,4 +276,22 @@ function purchaseAvailableAugmentations(sleeveNum, doPrint=false){
         }
     }
     return total;
+}
+
+/*
+    BE THE SLEEVE
+    1) If not synchronized, synchronize. Do nothing until synchronized.
+
+    2) If weak then train up.
+
+    3) If we haven't started a gang yet then train up main until he is 100s then start committing homicides until we
+       have a gang. We can't force main to do homicides, but we can start draining karma.
+
+    3) Determine which factions need rep, and work them
+
+    4) Find corporate jobs and work them until we join those factions. Then goto 3.
+
+ */
+function beTheSleeve(){
+
 }

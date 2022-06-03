@@ -9,9 +9,9 @@ const argsSchema = [
 const FACTION_NAME = "Slum Snakes";
 const TASK_TRAIN = "Train Combat";
 const TASK_VIGI = "Vigilante Justice";
-const TASK_NOOB = String.fromCharCode(77) + "ug People";
-const TASK_RESPECT = String.fromCharCode(84) + "errorism";
-const TASK_MONEY = "Human " + String.fromCharCode(84) + "rafficking";
+const TASK_NOOB = "Mug People";
+const TASK_RESPECT = "Terrorism";
+const TASK_MONEY = "Human Trafficking";
 const TASK_WARFARE = "Territory Warfare";
 const TASK_NULL = "Unassigned";
 const TASK_MANUAL = "Manual/NotReallyTaskName";
@@ -33,9 +33,9 @@ const MEMBERS_MAX = 12;
 
 const SLEEP_TIME = 10000;
 
-const FIRST_NAMES = ["Jimmy", "Johnny", "Joey", "Billy", "Pat", "Freddy", "Willy", "Louis", "Luis", "Larry", "Pete", "Joe", "Sammy", "Bruno", "Burt", "Mike", "Mikey", "Armando", "Hector", "Harry"];
-const NICK_NAMES = ["'Killer'", "'Shooter'", "'The Owl'", "'Lefty'", "'Whack-Whack'", "'The Chicken'", "'Horseface'", "'The Shark'", "'Squints'", "'Baldy'", "'Big Poppa''", "'The Gun'", "'Pistol'", "'Bullet'", "'Spider'", "'Joker'", "'Shorty'", "'Sniper'", "'Bouncer'", "'The Tank'"];
-const LAST_NAMES = ["Johnson", "Nelson", "Rodriguez", "Jefferson", "Washington", "Smith", "Mcguire", "Malone", "Murphy", "Greene", "Fitzpatrick", "Hanhrahan", "Higgins", "Connolly", "Capone", "Luciano", "Marino", "Milano", "Palermo", "Schmidt"]
+const FIRST_NAMES = ["Jimmy", "Johnny", "Joey", "Billy", "Pat", "Freddy", "Willy", "Louis", "Luis", "Larry", "Pete", "Joe", "Sammy", "Bruno", "Burt", "Mike", "Mikey", "Armando", "Hector", "Harry", "Walter", "Walt", "Steve", "Bobby", "Freddy", "Hank", "Adam"];
+const NICK_NAMES = ["'Killer'", "'Shooter'", "'The Owl'", "'Lefty'", "'Whack-Whack'", "'The Chicken'", "'Horseface'", "'The Shark'", "'Squints'", "'Baldy'", "'Big Poppa'", "'The Gun'", "'Pistol'", "'Bullet'", "'Spider'", "'Joker'", "'Shorty'", "'Sniper'", "'Bouncer'", "'The Tank'", "'Fruitcake'", "'Bulldog'", "'Muscles'", "'Happy'", "'Lucky'"];
+const LAST_NAMES = ["Johnson", "Nelson", "Rodriguez", "Jefferson", "Washington", "Smith", "Mcguire", "Malone", "Murphy", "Greene", "Fitzpatrick", "Hanhrahan", "Higgins", "Connolly", "Capone", "Luciano", "Marino", "Milano", "Palermo", "Schmidt", "Jackson", "McCloud", "Columbo", "Jones", "Adair"];
 
 /** @param {NS} _ns **/
 export async function main(_ns) {
