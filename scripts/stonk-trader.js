@@ -44,7 +44,7 @@ class StonkTrader {
         let historyString = JSON.stringify(this.marketHistory);
         await ns.write(HISTORY_FILE, historyString,"w");
     }
-    
+
     /** @param {Stonk} stock*/
     updateStock(stock){
         stock.currentPrice = ns.stock.getPrice(stock.symbol);
