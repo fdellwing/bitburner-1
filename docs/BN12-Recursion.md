@@ -17,16 +17,17 @@ recovered from shock. We will also need at least 1TB of home RAM to run all of o
 3) Set sleeves to working out all 4 combat skills
 4) Set main to working out at powergym to increase each combat skill to 100
 5) Join the blade burner division
-6) Set all sleeves to comitting homicide
+6) Set all sleeves to committing homicide
 7) Set main to committing homicide
 8) When at -54000 karma create the gang. 
 9) Start bladeburner script
 10) Start gang management script.
-11) At $500m buy tor, and all the darkweb programs.
-12) Purchase RAM upgrade
-13) Start stock management script.
-14) Start the remote hacking scripts, and fucking joes guns
-15) Install augmentations and start phase II when the following is true:
+11) Set sleeves to shock recovery
+12) At $500m buy tor, and all the darkweb programs.
+13) Purchase RAM upgrade
+14) Start stock management script.
+15) Start the remote hacking scripts, and fucking joes guns
+16) Install augmentations and start phase II when the following is true:
     - Purchased The Blade's Simulacrum $150b
     - Purchased EsperTech Bladeburner Eyewear
     - EMS-4 Recombination
@@ -54,6 +55,24 @@ sleeves with the easily attainable augmentations, and getting 100% gang territor
 ## Phase III: Go for the Kill
 
 1) 
+
+# Architecture
+
+## Modules
+All scripts for this project will follow the following naming convention: bn12-{purpose}.js
+Any existing scripts used for this purpose will be copied to the satisfy this convention
+
+- bn12-lib.js - common library of functions 
+- bn12-init.js - clears cache and initializes persistent storage, starts phase I
+- bn12-phase-1.js - phase I runner
+- bn12-phase-2.js - phase II runner
+- bn12-phase-3.js - phase III runner
+- bn12-grow-bad-karma.js - start killing 
+- bn12-stock-trader.js - stock management script
+- bn12-bladeburner-manager.js - bladeburner runner
+- bn12-gang-manager.js - gang management
+- bn12-sleeve-manager.js - sleeve management
+
 
 # Development Notes
 

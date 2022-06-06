@@ -1,10 +1,10 @@
 /*
  * The idea behin this script is start commiting crimes, starting with the easiest
  * and progressing to homicide. Once we start commiting homicides we kill people 
- * until we have enough negative karma, then launch the manage-combat-gang.js 
- * script with the -c flag to create a new gang. 
+ * until the script is manually killed.
  */
 import { formatMoney } from "./helpers";
+
 const crimes = [
     "homicide",
     "larceny",
@@ -12,6 +12,7 @@ const crimes = [
     "rob store",
     "shoplift",
 ];
+
 let murders = 0;
 let crimesCommitted = 0;
 /** @type import(".").NS */

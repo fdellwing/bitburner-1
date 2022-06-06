@@ -1,6 +1,6 @@
 /*
- * The idea behin this script is start commiting crimes, starting with the easiest
- * and progressing to homicide. Once we start commiting homicides we kill people 
+ * The idea behind this script is start committing crimes, starting with the easiest
+ * and progressing to homicide. Once we start committing homicides we kill people
  * until we have enough negative karma, then launch the manage-combat-gang.js 
  * script with the -c flag to create a new gang. 
  */
@@ -74,7 +74,7 @@ function commitCrime(crime) {
         ns.printf("Murder chance: %f", ch);
     }
     let karma = ns.heart.break();
-    ns.printf("Crimes comitted this session: %d", crimesCommitted);
+    ns.printf("Crimes committed this session: %d", crimesCommitted);
     ns.printf("Murders this session: %d", murders);
     ns.printf("Kills: %d", player.numPeopleKilled);
     ns.printf("Karma: %d", karma);
