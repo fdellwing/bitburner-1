@@ -37,7 +37,7 @@ export async function main(_ns) {
     log(ns, "Getting state...");
     let bitnodeStateText = await getBitnodeState(ns);
     log(ns,bitnodeStateText);
-    
+
     let bitnodeState = JSON.parse(`${bitnodeStateText}`.trimEnd());
 
     if (bitnodeState.phase === 0) {
@@ -163,7 +163,7 @@ function getStatNumberToWorkout() {
  *
  * Start gang management script.
  */
-async function stepThree() {    
+async function stepThree() {
     let notDone = true;
     let timeout = 250; // In ms - too low of a time will result in a lockout/hang
     let theCrime = "homicide";
@@ -178,6 +178,12 @@ async function stepThree() {
         }
     }
 
+    let invites = ns.singularity.checkFactionInvitations();
+    for(let invite of invites){
+        ns.singularity.joinFaction(invite);
+        log(ns,`SUCCESS: joined the '${invite}' faction.`);
+    }
+    await ns.sleep(timeout);
     // create gang and start managing
     createGang();
     ns.run("bn12-gang-management.js");

@@ -49,12 +49,21 @@ sleeves with the easily attainable augmentations, and getting 100% gang territor
 8) set final 2 sleeves to committing homicides for now
 9) At $20t saved buy all the bladeburner augmentations
 10) Upgrade sleeves with all augmentations less than $1t
-11) While waiting for 100% territory continue to buy RAM, Cores, and affordable augmentations
+11) While waiting for 100% territory continue to buy RAM, Cores, and aff-*ordable augmentations
 
 
 ## Phase III: Go for the Kill
+In this phase 
 
-1) 
+1) Reset stored variables tracking things that reset with install, like server preparedness
+2) Kick off stock manager
+3) Kick off gang manager
+4) Kick off bladeburner manager
+5) Set sleeves to working out and learning stuff.
+6) Travel to New Tokyo
+7) graft nickofolas Congruity Implant
+8) graft more combat augmentations
+10) Set sleeves to assisting bladeburner actions.
 
 # Architecture
 
@@ -67,11 +76,9 @@ Any existing scripts used for this purpose will be copied to the satisfy this co
 - bn12-phase-1.js - phase I runner
 - bn12-phase-2.js - phase II runner
 - bn12-phase-3.js - phase III runner
-- bn12-grow-bad-karma.js - start killing 
-- bn12-stock-trader.js - stock management script
-- bn12-bladeburner-manager.js - bladeburner runner
-- bn12-gang-manager.js - gang management
-- bn12-sleeve-manager.js - sleeve management
+- bn12-stock-management.js - stock management script
+- bn12-bladeburner-management.js - bladeburner runner
+- bn12-gang-management.js - gang management
 
 
 # Development Notes
@@ -92,18 +99,7 @@ OMTK	$151.396m
 FSIG	$1.618b
 KGI	$130.010m
 FLCM	$399.221m
-STM	$401.083m
-DCOMM	$8.550m
-HLS	$143.919m
-VITA	$78.702m
-ICRS	$230.319m
-UNV	$121.094m
-AERO	$196.436m
-OMN	$183.142m
-SLRS	$134.831m
-GPH	$183.901m
-NVMD	$529.017m
-WDS	$78.853m
+STM	$401.083mdestroyW0r1dD43m0n
 LXO	$114.307m
 RHOC	$142.422m
 APHE	$18.095m

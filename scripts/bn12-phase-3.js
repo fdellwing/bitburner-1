@@ -209,5 +209,7 @@ async function checkGrafting(){
 }
 
 function burnThisMotherFuckerDown(){
+    
+    // You must have the special augment installed and the required hacking level OR Completed the final black op.
     ns.singularity.destroyW0r1dD43m0n(12,"bn12-init.js");
 }
