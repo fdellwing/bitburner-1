@@ -17,8 +17,12 @@ const sleeveNames = [
 /** @param {NS} _ns **/
 export async function main(_ns) {
     ns = _ns;    
-    calculateMoneyRequiredForAugmentations(3,true);
-    log(ns,`array includes ${avoidedSleeveAugmentations.includes("QLink")}`, true);
+    //calculateMoneyRequiredForAugmentations(3,true);
+    //log(ns,`array includes ${avoidedSleeveAugmentations.includes("QLink")}`, true);
+    //ns.sleeve.setToBladeburnerAction(0,"Take on contracts","Tracking");
+    ns.sleeve.setToBladeburnerAction(1,"Diplomacy");
+    //ns.sleeve.setToBladeburnerAction(3,"Take on contracts","Retirement");
+
 }
 
 

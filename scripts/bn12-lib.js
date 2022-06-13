@@ -1,5 +1,6 @@
 
 const BITNODE_STATE_FILE = "/Temp/bn12-state.txt";
+const READY_TO_DESTROY_FILE = "/Temp/bn12-ready-to-die.txt";
 
 /** @param {NS} ns **/
 export function BitnodeState(ns) {
@@ -91,7 +92,7 @@ export function isRunning(ns, script, ...args) {
 /**
  * SleeveOrder type
  * @param {number} sleeveNumber 
- * @param {string} type 'travel', 'crime', 'gym', 'revocery', 'bladeburner', "company", "faction"
+ * @param {string} type 'travel', 'crime', 'gym', 'recovery', 'bladeburner', "company", "faction"
  * @param  {...any} args 
  */
 export function SleeveOrder(sleeveNumber, type, ...args) {
@@ -110,21 +111,27 @@ export function executeSleeveOrder(ns, sleeveOrder) {
     let sn = sleeveOrder.sleeveNumber;
     let type = sleeveOrder.type;
     let args = sleeveOrder.args;
+
     if (type === "travel") {
         ns.sleeve.travel(sn, args[0]);
     }
+
     if (type === "crime") {
         ns.sleeve.setToCommitCrime(sn, args[0]);
     }
+
     if (type === "gym") {
         ns.sleeve.setToGymWorkout(sn, args[0], args[1]);
     }
-    if (type === "revocery") {
+
+    if (type === "recovery") {
         ns.sleeve.setToShockRecovery(sn);
     }
+
     if(type === "bladeburner"){
         ns.sleeve.setToBladeburnerAction(sn, args[0], args[1]);
     }
+
     if(type === "faction"){
         ns.sleeve.setToFactionWork(sn, args[0], args[1]);
     }
@@ -136,6 +143,22 @@ export function executeSleeveOrder(ns, sleeveOrder) {
     if(type === "university"){
         ns.sleeve.setToUniversityCourse(sn, args[0], args[1]);
     }
+}
 
+/**
+ * Write the file that is used to signal that the bitnode is ready to be destroyed
+ * @param {import(".").NS} ns
+ * @returns {Promise<void>}
+ */
+export async function signalBitNodeReadyToDie(ns){
+    await ns.write(READY_TO_DESTROY_FILE,"true","w");
+}
 
+/**
+ * returns true if the bitnode is ready to be destroyed
+ * @param {import(".").NS} ns
+ * @returns {boolean}
+ */
+export function isBitNodeReadyToDie(ns){
+    return ns.fileExists(READY_TO_DESTROY_FILE,"home");
 }

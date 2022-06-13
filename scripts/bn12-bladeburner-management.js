@@ -1,4 +1,5 @@
 import { log, disableLogs, getNsDataThroughFile, runCommand, getActiveSourceFiles, formatNumberShort, formatDuration } from './bs-helpers.js'
+import {signalBitNodeReadyToDie} from "./bn12-lib";
 
 const cityNames = ["Sector-12", "Aevum", "Volhaven", "Chongqing", "New Tokyo", "Ishima"];
 const antiChaosOperation = "Stealth Retirement Operation"; // Note: Faster and more effective than Diplomacy at reducing city chaos
@@ -255,6 +256,8 @@ async function mainLoop(ns) {
                 log(ns, `SUCCESS: Bladeburner is ready to undertake the last BlackOp! (At ${formatDuration(time)})`, true, 'success');
                 ns.alert("Bladeburner is ready to undertake the last BlackOp (ends the bitnode)");
                 lastBlackOpReady = true;
+                // WRITE THE SENTINEL FILE
+                await signalBitNodeReadyToDie(ns);
             }
             candidateActions = candidateActions.filter(a => a != nextBlackOp);
         }
