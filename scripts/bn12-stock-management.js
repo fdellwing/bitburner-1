@@ -34,8 +34,7 @@ let sleepInterval = 1000;
 let options;
 const argsSchema = [
     ['l', false], // Stop any other running stockmaster.js instances and sell all stocks
- 0
-     ['liquidate', false],
+    ['liquidate', false],
     ['mock', false], // If set to true, will "mock" buy/sell but not actually buy/sell anything
     ['noisy', false], // If set to true, tprints and announces each time stocks are bought/soldgetHostnames
     ['disable-shorts', false], // If set to true, will not short any stocks. Will be set depending on having SF8.2 by default.
@@ -65,7 +64,7 @@ export function autocomplete(data, args) {
     return [];
 }
 
-/** Requires access to the TIX API. Purchases access to the 4S Mkt Data API as soon as it can
+/** Requires access to the TIX API. Purchases access to the 4S Mkt Data API as soon as it can 
  * @param {NS} ns */
 export async function main(ns) {
     ns.disableLog("ALL");
@@ -201,7 +200,7 @@ export async function main(ns) {
                 let owned = stk.ownedShares() > 0;
                 if (estEndOfCycleValue <= 2 * commission)
                     log(ns, (owned ? '' : `We currently have ${formatNumberShort(stk.ownedShares(), 3, 1)} shares in ${stk.sym} valued at ${formatMoney(stk.positionValue())} ` +
-                            `(${(100 * stk.positionValue() / maxHoldings).toFixed(1)}% of corpus, capped at ${(diversification * 100).toFixed(1)}% by --diversification).\n`) +
+                        `(${(100 * stk.positionValue() / maxHoldings).toFixed(1)}% of corpus, capped at ${(diversification * 100).toFixed(1)}% by --diversification).\n`) +
                         `Despite attractive ER of ${formatBP(stk.absReturn())}, ${owned ? 'more ' : ''}${stk.sym} was not bought. ` +
                         `\nBudget: ${formatMoney(budget)} can only buy ${numShares.toLocaleString()} ${owned ? 'more ' : ''}shares @ ${formatMoney(purchasePrice)}. ` +
                         `\nGiven an estimated ${marketCycleLength - estTick} ticks left in market cycle, less ${stk.timeToCoverTheSpread().toFixed(1)} ticks to cover the spread (${(stk.spread_pct * 100).toFixed(2)}%), ` +
@@ -309,7 +308,7 @@ const forecast = history => history.reduce((ups, price, idx) => idx == 0 ? 0 : (
 // An "inversion" can be detected if two probabilities are far enough apart and are within "tolerance" of p1 being equal to 1-p2
 const tol2 = inversionDetectionTolerance / 2;
 const detectInversion = (p1, p2) => ((p1 >= 0.5 + tol2) && (p2 <= 0.5 - tol2) && p2 <= (1 - p1) + inversionDetectionTolerance)
-    /* Reverse Condition: */ || ((p1 <= 0.5 - tol2) && (p2 >= 0.5 + tol2) && p2 >= (1 - p1) - inversionDetectionTolerance);
+        /* Reverse Condition: */ || ((p1 <= 0.5 - tol2) && (p2 >= 0.5 + tol2) && p2 >= (1 - p1) - inversionDetectionTolerance);
 
 /** @param {NS} ns **/
 async function updateForecast(ns, allStocks, has4s) {
@@ -409,7 +408,7 @@ let sellStockWrapper = async (ns, sym, numShares) => await transactStock(ns, sym
 let sellShortWrapper = async (ns, sym, numShares) => await transactStock(ns, sym, numShares, 'sellShort'); // ns.stock.sellShort(sym, numShares);
 let transactStock = async (ns, sym, numShares, action) => await getNsDataThroughFile(ns, `ns.stock.${action}('${sym}', ${numShares})`, '/Temp/transact-stock.txt'); // ns.stock.sellShort(sym, numShares);
 
-/** @param {NS} ns
+/** @param {NS} ns 
  * Automatically buys either a short or long position depending on the outlook of the stock. */
 async function doBuy(ns, stk, sharesToBuy) {
     // We include -2*commission in the "holdings value" of our stock, but if we make repeated purchases of the same stock, we have to track
@@ -448,7 +447,7 @@ async function doBuy(ns, stk, sharesToBuy) {
     return sharesToBuy * price + commission; // Return the amount spent on the transaction so it can be subtracted from our cash on hand
 }
 
-/** @param {NS} ns
+/** @param {NS} ns 
  * Sell our current position in this stock. */
 async function doSellAll(ns, stk) {
     let long = stk.sharesLong > 0;
