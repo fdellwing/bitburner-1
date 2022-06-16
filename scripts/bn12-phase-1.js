@@ -1,4 +1,4 @@
-import { getBitnodeState, saveBitnodeState, doDarkWebBusiness } from "./bn12-lib";
+import { getBitnodeState, saveBitnodeState, doDarkWebBusiness, pimpOutHomeSystem } from "./bn12-lib";
 import { log } from "./helpers";
 
 const PHASE1_STATE = "/Temp/bn12-phase1.txt"
@@ -314,6 +314,7 @@ async function installAndStartPhase2() {
     for(let aug of factionAugs){
         ns.purchaseAugmentation(GANG_FACTION_NAME, aug);
     }
+    pimpOutHomeSystem(ns);
     log(ns, "SUCCESS: Phase 1 complete! Installing augmentations and starting phase 2.");
     ns.installAugmentations("bn12-phase-2.js");
 }

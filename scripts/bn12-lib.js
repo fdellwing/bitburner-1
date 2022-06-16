@@ -162,3 +162,32 @@ export async function signalBitNodeReadyToDie(ns){
 export function isBitNodeReadyToDie(ns){
     return ns.fileExists(READY_TO_DESTROY_FILE,"home");
 }
+
+/**
+ * 
+ * @param {import(".").NS} ns
+ */
+export function pimpOutHomeSystem(ns){
+    let p = "";
+    do {        
+        let money = ns.getServerMoneyAvailable("home");
+        let c = ns.singularity.getUpgradeHomeRamCost();
+        p = "ram";
+        if(c < ns.singularity.getUpgradeHomeCoresCost()){
+            c = ns.singularity.getUpgradeHomeCoresCost();
+            p = "cores";
+        }
+        if(money >= c){
+            switch(p){
+                case "ram":
+                    ns.singularity.upgradeHomeRam();
+                    break;
+                default:
+                    ns.singularity.upgradeHomeCores();
+                    break;
+            }
+        } else {
+            p ="";
+        }
+    } while(p!=="")
+}

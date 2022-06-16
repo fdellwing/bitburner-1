@@ -5,7 +5,7 @@
         3) getting 100% gang territory.
         Once all three are true we install augmentation and start phase 3.
 */
-import { getBitnodeState, saveBitnodeState, runScript, doDarkWebBusiness, executeSleeveOrder } from "./bn12-lib";
+import { getBitnodeState, saveBitnodeState, runScript, doDarkWebBusiness, executeSleeveOrder, pimpOutHomeSystem } from "./bn12-lib";
 import { log, formatMoney } from "./helpers";
 /** @type import(".").NS */
 let ns = null;
@@ -187,10 +187,11 @@ async function checkOnHacking(){
 
 async function tryUpgradeSleeves(){
     let sleeveNum = ns.sleeve.getNumSleeves();
-    
+    let completed = 0;
     for(let i = 0; i < sleeveNum; i++){
         let sleeveAugs = ns.sleeve.getSleeveAugmentations(i);
         if(sleeveAugs.length>=SLEEVE_AUG_NUMBER){
+            completed++;
             continue;
         }
         if(myMoney() >= calculateMoneyRequiredForAugmentations(i)){
@@ -201,7 +202,7 @@ async function tryUpgradeSleeves(){
     }
 
     // if we get this far then we are done with sleeveAugmentations
-    phaseState.allSleevesUpgraded = true;
+    phaseState.allSleevesUpgraded = completed===sleeveNum;
     await savePhaseState();
 }
 
@@ -300,6 +301,8 @@ async function installAndStartPhase3() {
     for(let aug of factionAugs){
         ns.purchaseAugmentation(GANG_FACTION_NAME, aug);
     }
+    // buy memory and core upgrades if possible
+    pimpOutHomeSystem(ns);
     log(ns, "SUCCESS: Phase 2 complete! Installing augmentations and starting phase 3.");
     ns.installAugmentations("bn12-phase-3.js");
 }
