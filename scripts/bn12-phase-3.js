@@ -71,7 +71,7 @@ export async function main(_ns) {
             phaseState = new PhaseState();
             await savePhaseState();
         } else {
-            let ps = await ns.read(PHASE3_STATE);
+            let ps = ns.read(PHASE3_STATE);
             phaseState = JSON.parse(ps);
         }
     }
@@ -286,7 +286,7 @@ async function installAugmentations() {
 /**
  * Destroy the bitnode and start bitnode 12 over again. 
  */
-function burnThisMotherFuckerDown() {
+async function burnThisMotherFuckerDown() {
 
     // You must have the special augment installed and the required hacking level OR Completed the final black op.
     ns.scriptKill("bn12-bladeburner-management.js", "home");    
