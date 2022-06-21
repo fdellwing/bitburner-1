@@ -7,7 +7,7 @@
     When we get the signal from the bladeburner manager that we can 
     do it, we burn the mother fucker down.
 */
-import { getBitnodeState, saveBitnodeState, runScript, doDarkWebBusiness, executeSleeveOrder, isBitNodeReadyToDie, pimpOutHomeSystem } from "./bn12-lib";
+import { getBitnodeState, saveBitnodeState, runScript, doDarkWebBusiness, executeSleeveOrder, isBitNodeReadyToDie, pimpOutHomeSystem, acceptFactionInvitations} from "./bn12-lib";
 import { log } from "./helpers";
 
 /** @type import(".").NS */
@@ -16,6 +16,9 @@ let ns = null;
 const PHASE3_STATE = "/Temp/bn12-phase3.txt"
 const GANG_FACTION_NAME = "Slum Snakes";
 const REMOTE_HACKING_SCRIPT = "infinity-remote-spinup.js";
+const expensiveAugmentations = ["QLink", "Hydroflame Left Arm"];
+const SHARE = "share.js";
+const THE_RED_PILL = "The Red Pill";
 
 const startingSleeveScript = [
     { sleeveNumber: 0, type: "gym", args: ["Powerhouse Gym", "strength"] },
@@ -122,6 +125,7 @@ function PhaseState() {
     this.purchasedAllGangAugs = false;
     this.augmentationsToInstall = [];
     this.installingAugmentations = false;
+    this.takenTheRedPill = false;
 
 }
 
@@ -182,6 +186,26 @@ async function doOurThing() {
             await checkGrafting();
         }
 
+        acceptFactionInvitations(ns);   
+
+        if(joinedDaedalus() && !phaseState.takenTheRedPill) {            
+            workForDaedalus();
+            if(ns.singularity.purchaseAugmentation("Daedalus",THE_RED_PILL)){
+                phaseState.takenTheRedPill = true;
+                ns.singularity.stopAction();
+                await savePhaseState();
+                await installAugmentations();
+            }            
+        }
+
+        if(phaseState.takenTheRedPill){
+            let ph = ns.getPlayer.hacking;
+            let sh = ns.getServer("w0r1d_d43m0n").requiredHackingSkill;
+            if(ph >= sh){
+                ns.singularity.destroyW0r1dD43m0n(12, "bn12-init.js");            
+            }
+        }
+
         // every 10 minutes we set the sleeves to bb missions
         if (loopCount % 600 === 0) {
             contractCounter++;
@@ -205,6 +229,29 @@ async function doOurThing() {
 function myMoney() {
     return ns.getServerMoneyAvailable("home");
 }
+
+function joinedDaedalus() {
+    for(let f of ns.getPlayer().factions){
+        if(f==="Daedalus") {
+            return true;
+        }
+    }
+    return false;
+}
+
+function workForDaedalus() {
+    if(!ns.isRunning(SHARE)){
+        let mr = ns.getScriptRam(SHARE, "home")+1;        
+
+        let availableRam = ns.getServerMaxRam("home") - ns.getServerUsedRam("home") - 512;
+        tlog(`mr = ${mr}; availableRam = ${availableRam}`);
+        let threads = parseInt(availableRam / mr);
+        ns.run(SHARE, threads);
+    }
+
+    ns.singularity.workForFaction("Daedalus", "Hacking", false);
+}
+
 
 async function checkGrafting() {
     let playerLocation = ns.getPlayer().city;
@@ -271,9 +318,11 @@ async function installAugmentations() {
     ns.run("bn12-stock-management.js", 1, "-l"); // cashout stocks
     await ns.sleep(1000);
     let factionAugs = ns.getAugmentationsFromFaction(GANG_FACTION_NAME);
+    
     for(let aug of factionAugs){
         ns.purchaseAugmentation(GANG_FACTION_NAME, aug);
     }
+
     // buy memory and core upgrades if possible
     pimpOutHomeSystem(ns);
 
@@ -291,20 +340,24 @@ async function burnThisMotherFuckerDown() {
     // You must have the special augment installed and the required hacking level OR Completed the final black op.
     ns.scriptKill("bn12-bladeburner-management.js", "home");    
     ns.bladeburner.stopBladeburnerAction();
-    ns.bladeburner.startAction("BlackOps","Operation Daedalus");
+    ns.bladeburner.startAction("BlackOps", "Operation Daedalus");
     ns.singularity.destroyW0r1dD43m0n(12,"bn12-init.js");
     ns.tprint("I wish we didn't get this far");
     let running = true;
-    let tick = 0;
+    //let tick = 0;
     while(running){
-        tick++;
-        await ns.sleep(1000);
-        let action = ns.bladeburner.getCurrentAction();
+        //tick++;        
+        //let action = ns.bladeburner.getCurrentAction();
         ns.singularity.destroyW0r1dD43m0n(12,"bn12-init.js");
-        ns.tprintf("tick %d: action = %s",tick, action.type);
-        if(action.type==="idle"){
-            running = false;
-        }
+        //ns.tprintf("tick %d: action = %s",tick, action.type);
+        //if(action.type==="idle"){
+        //    running = false;
+        //}
+        await ns.sleep(100);
     }
-    ns.singularity.destroyW0r1dD43m0n(12,"bn12-init.js");
+    ns.singularity.destroyW0r1dD43m0n(12, "bn12-init.js");    
 }
+
+
+
+

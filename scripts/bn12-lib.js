@@ -173,7 +173,7 @@ export function pimpOutHomeSystem(ns){
         let money = ns.getServerMoneyAvailable("home");
         let c = ns.singularity.getUpgradeHomeRamCost();
         p = "ram";
-        if(c < ns.singularity.getUpgradeHomeCoresCost()){
+        if(c > ns.singularity.getUpgradeHomeCoresCost()){
             c = ns.singularity.getUpgradeHomeCoresCost();
             p = "cores";
         }
@@ -190,4 +190,15 @@ export function pimpOutHomeSystem(ns){
             p ="";
         }
     } while(p!=="")
+}
+
+/**
+ * join factions
+ * @param {import(".").NS} ns
+ */
+export function acceptFactionInvitations(ns) {
+    let factions = ns.singularity.checkFactionInvitations();
+    for(let faction of factions){
+        ns.singularity.joinFaction(faction);
+    }    
 }
