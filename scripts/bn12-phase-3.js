@@ -7,7 +7,7 @@
     When we get the signal from the bladeburner manager that we can 
     do it, we burn the mother fucker down.
 */
-import { getBitnodeState, saveBitnodeState, runScript, doDarkWebBusiness, executeSleeveOrder, isBitNodeReadyToDie, pimpOutHomeSystem, acceptFactionInvitations} from "./bn12-lib";
+import { getBitnodeState, saveBitnodeState, runScript, doDarkWebBusiness, executeSleeveOrder, isBitNodeReadyToDie, pimpOutHomeSystem, acceptFactionInvitations } from "./bn12-lib";
 import { log } from "./helpers";
 
 /** @type import(".").NS */
@@ -44,6 +44,11 @@ const bladeburnerSleeveScript = [
     { sleeveNumber: 7, type: "bladeburner", args: ["Infiltrate synthoids"] },
 ];
 
+const sleeveDaedalusScript = [
+
+    { sleeveNumber: 4, type: "faction", args: ["Daedalus", "Field Work"] },
+];
+
 let contracts = ["Retirement", "Bounty Hunter", "Tracking"];
 
 /** @type {PhaseState} */
@@ -53,6 +58,7 @@ const managementScripts = ["bn12-bladeburner-management.js", "bn12-gang-manageme
 /** @param {NS} _ns **/
 export async function main(_ns) {
     ns = _ns;
+    ns.disableLog("ALL");
     tlog("INFO: BN12 PHASE III");
     tlog("Getting state...");
     let bitNodeStateText = await getBitnodeState(ns);
@@ -78,7 +84,7 @@ export async function main(_ns) {
             phaseState = JSON.parse(ps);
         }
     }
-    if(phaseState.installingAugmentations){
+    if (phaseState.installingAugmentations) {
         phaseState.darkwebProgramsPurchased = false;
         phaseState.fuckedJoesGuns = false;
         phaseState.installingAugmentations = false;
@@ -178,7 +184,7 @@ async function doOurThing() {
             await buyGangAugmentations();
         }
 
-        if(isTimeToInstallAugmentations()){
+        if (isTimeToInstallAugmentations()) {
             await installAugmentations();
         }
 
@@ -186,23 +192,23 @@ async function doOurThing() {
             await checkGrafting();
         }
 
-        acceptFactionInvitations(ns);   
+        acceptFactionInvitations(ns);
 
-        if(joinedDaedalus() && !phaseState.takenTheRedPill) {            
+        if (joinedDaedalus() && !phaseState.takenTheRedPill) {
             workForDaedalus();
-            if(ns.singularity.purchaseAugmentation("Daedalus",THE_RED_PILL)){
+            if (ns.singularity.purchaseAugmentation("Daedalus", THE_RED_PILL)) {
                 phaseState.takenTheRedPill = true;
                 ns.singularity.stopAction();
                 await savePhaseState();
                 await installAugmentations();
-            }            
+            }
         }
 
-        if(phaseState.takenTheRedPill){
-            let ph = ns.getPlayer.hacking;
+        if (phaseState.takenTheRedPill) {
+            let ph = ns.getPlayer().hacking;
             let sh = ns.getServer("w0r1d_d43m0n").requiredHackingSkill;
-            if(ph >= sh){
-                ns.singularity.destroyW0r1dD43m0n(12, "bn12-init.js");            
+            if (ph >= sh) {
+                ns.singularity.destroyW0r1dD43m0n(12, "bn12-init.js");
             }
         }
 
@@ -231,8 +237,8 @@ function myMoney() {
 }
 
 function joinedDaedalus() {
-    for(let f of ns.getPlayer().factions){
-        if(f==="Daedalus") {
+    for (let f of ns.getPlayer().factions) {
+        if (f === "Daedalus") {
             return true;
         }
     }
@@ -240,15 +246,13 @@ function joinedDaedalus() {
 }
 
 function workForDaedalus() {
-    if(!ns.isRunning(SHARE)){
-        let mr = ns.getScriptRam(SHARE, "home")+1;        
-
+    if (!ns.isRunning(SHARE)) {
+        let mr = ns.getScriptRam(SHARE, "home") + 1;
         let availableRam = ns.getServerMaxRam("home") - ns.getServerUsedRam("home") - 512;
-        tlog(`mr = ${mr}; availableRam = ${availableRam}`);
         let threads = parseInt(availableRam / mr);
         ns.run(SHARE, threads);
     }
-
+    setSleevesToWork(sleeveDaedalusScript);
     ns.singularity.workForFaction("Daedalus", "Hacking", false);
 }
 
@@ -293,9 +297,9 @@ async function buyGangAugmentations() {
         if (ns.singularity.purchaseAugmentation(GANG_FACTION_NAME, aug)) {
             tlog(`Purchased ${aug}`);
             phaseState.augmentationsToInstall.push(aug);
-            if(phaseState.augmentationsToInstall.length==augs.length){
+            if (phaseState.augmentationsToInstall.length == augs.length) {
                 phaseState.purchasedAllGangAugs = true;
-            }            
+            }
             await savePhaseState();
         }
     }
@@ -318,8 +322,8 @@ async function installAugmentations() {
     ns.run("bn12-stock-management.js", 1, "-l"); // cashout stocks
     await ns.sleep(1000);
     let factionAugs = ns.getAugmentationsFromFaction(GANG_FACTION_NAME);
-    
-    for(let aug of factionAugs){
+
+    for (let aug of factionAugs) {
         ns.purchaseAugmentation(GANG_FACTION_NAME, aug);
     }
 
@@ -338,24 +342,24 @@ async function installAugmentations() {
 async function burnThisMotherFuckerDown() {
 
     // You must have the special augment installed and the required hacking level OR Completed the final black op.
-    ns.scriptKill("bn12-bladeburner-management.js", "home");    
+    ns.scriptKill("bn12-bladeburner-management.js", "home");
     ns.bladeburner.stopBladeburnerAction();
     ns.bladeburner.startAction("BlackOps", "Operation Daedalus");
-    ns.singularity.destroyW0r1dD43m0n(12,"bn12-init.js");
+    ns.singularity.destroyW0r1dD43m0n(12, "bn12-init.js");
     ns.tprint("I wish we didn't get this far");
     let running = true;
     //let tick = 0;
-    while(running){
+    while (running) {
         //tick++;        
         //let action = ns.bladeburner.getCurrentAction();
-        ns.singularity.destroyW0r1dD43m0n(12,"bn12-init.js");
+        ns.singularity.destroyW0r1dD43m0n(12, "bn12-init.js");
         //ns.tprintf("tick %d: action = %s",tick, action.type);
         //if(action.type==="idle"){
         //    running = false;
         //}
         await ns.sleep(100);
     }
-    ns.singularity.destroyW0r1dD43m0n(12, "bn12-init.js");    
+    ns.singularity.destroyW0r1dD43m0n(12, "bn12-init.js");
 }
 
 

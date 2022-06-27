@@ -46,7 +46,8 @@ const managementScripts = ["bn12-bladeburner-management.js", "bn12-gang-manageme
 
 /** @param {NS} _ns **/
 export async function main(_ns) {
-    ns = _ns;    
+    ns = _ns;  
+    ns.disableLog("ALL");  
     tlog("INFO: BN12 PHASE II");
     tlog("Getting state...");
     let bitnodeStateText = await getBitnodeState(ns);
@@ -297,6 +298,10 @@ function printPhaseProgress(){
 async function installAndStartPhase3() {
     ns.run("bn12-stock-management.js", 1, "-l"); // cashout stocks
     await ns.sleep(1000);
+    while(ns.bladeburner.getCurrentAction().type == "BlackOps") {
+        tlog("Unable to install augmentations while doing Black-Ops!")
+        await ns.sleep(10000); // don't interrupt if we are doing some black op shit
+    }
     let factionAugs = ns.getAugmentationsFromFaction(GANG_FACTION_NAME);
     for(let aug of factionAugs){
         ns.purchaseAugmentation(GANG_FACTION_NAME, aug);
