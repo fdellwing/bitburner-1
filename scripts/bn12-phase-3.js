@@ -4,7 +4,7 @@
         2) Install augmentations purchased from the gang
         2) Grafting on combat augmentations
 
-    When we get the signal from the bladeburner manager that we can 
+    When we get the signal from the bladeburner manager that we can
     do it, we burn the mother fucker down.
 */
 import { getBitnodeState, saveBitnodeState, runScript, doDarkWebBusiness, executeSleeveOrder, isBitNodeReadyToDie, pimpOutHomeSystem, acceptFactionInvitations } from "./bn12-lib";
@@ -18,6 +18,7 @@ const GANG_FACTION_NAME = "Slum Snakes";
 const REMOTE_HACKING_SCRIPT = "infinity-remote-spinup.js";
 const expensiveAugmentations = ["QLink", "Hydroflame Left Arm"];
 const SHARE = "share.js";
+const LOCAL_HACK_SCRIPT = "infinity-spinup.js";
 const THE_RED_PILL = "The Red Pill";
 
 const startingSleeveScript = [
@@ -132,6 +133,7 @@ function PhaseState() {
     this.augmentationsToInstall = [];
     this.installingAugmentations = false;
     this.takenTheRedPill = false;
+    this.startedLocalHack = false;
 
 }
 
@@ -162,7 +164,9 @@ async function checkOnHacking() {
     }
 
     let player = ns.getPlayer();
-    if (phaseState.lastRemoteSpinupHackLevel === -1 || player.hacking - phaseState.lastRemoteSpinupHackLevel >= 50) {
+    if (phaseState.lastRemoteSpinupHackLevel === -1 ||
+        (player.hacking < 1000 && player.hacking - phaseState.lastRemoteSpinupHackLevel >= 50) ||
+        (player.hacking < 2000 && player.hacking - phaseState.lastRemoteSpinupHackLevel >= 100)) {
         ns.run("kill-all.js", 1, "-r");
         await ns.sleep(250);
         llog("Doing some remote spin-up!")
@@ -205,10 +209,20 @@ async function doOurThing() {
         }
 
         if (phaseState.takenTheRedPill) {
+            llog("Red pill taken");
             let ph = ns.getPlayer().hacking;
             let sh = ns.getServer("w0r1d_d43m0n").requiredHackingSkill;
+
             if (ph >= sh) {
+                llog("destroy daemon")
                 ns.singularity.destroyW0r1dD43m0n(12, "bn12-init.js");
+            } else {
+                llog(`player hack = ${ph}; required skill = ${sh}`);
+            }
+            if(!phaseState.startedLocalHack && ph > 2000){
+                ns.run(LOCAL_HACK_SCRIPT);
+                phaseState.startedLocalHack = true;
+                await savePhaseState();
             }
         }
 
@@ -228,6 +242,7 @@ async function doOurThing() {
             // try to solve contracts once a minute once we have enough memory
             ns.run("contract-auto-solver.js");
         }
+        // no bladeburner option while out
         phaseState.readyToDestroyBitnode = isBitNodeReadyToDie(ns);
     }
 }
@@ -337,7 +352,7 @@ async function installAugmentations() {
 }
 
 /**
- * Destroy the bitnode and start bitnode 12 over again. 
+ * Destroy the bitnode and start bitnode 12 over again.
  */
 async function burnThisMotherFuckerDown() {
 
@@ -350,7 +365,7 @@ async function burnThisMotherFuckerDown() {
     let running = true;
     //let tick = 0;
     while (running) {
-        //tick++;        
+        //tick++;
         //let action = ns.bladeburner.getCurrentAction();
         ns.singularity.destroyW0r1dD43m0n(12, "bn12-init.js");
         //ns.tprintf("tick %d: action = %s",tick, action.type);
