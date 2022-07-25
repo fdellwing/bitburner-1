@@ -95,7 +95,7 @@ export async function main(_ns) {
     launchManagementScripts();
     setSleevesToWork(startingSleeveScript);
     await doOurThing();
-    burnThisMotherFuckerDown();
+    await burnThisMotherFuckerDown();
 }
 
 function llog(m) {
@@ -261,7 +261,7 @@ function joinedDaedalus() {
 }
 
 function workForDaedalus() {
-    if (!ns.isRunning(SHARE)) {
+    if (!ns.isRunning(SHARE, "home")) {
         let mr = ns.getScriptRam(SHARE, "home") + 1;
         let availableRam = ns.getServerMaxRam("home") - ns.getServerUsedRam("home") - 512;
         let threads = parseInt(availableRam / mr);
