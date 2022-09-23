@@ -814,45 +814,49 @@ function shortestPathInGrid(data) {
 // Proper 2-Coloring of a Graph
 
 function proper2ColoringOfAGraph(data) {
-    let n = data[0];    // number of vertices
-    let a = data[1];    // adjacency data
-
-    // create an adjacency matrix for the BFS
-    let adjacencyMatrix = [];
-    for (let i = 0; i < n; i++) {
-        adjacencyMatrix.push(new Array(n).fill(0));
-    }
-    for (let edge of a) {
-        let v1 = edge[0];
-        let v2 = edge[1];
-        adjacencyMatrix[v1][v2] = 1;
-        adjacencyMatrix[v2][v1] = 1;
+    //Helper function to get neighbourhood of a vertex
+    function neighbourhood(vertex) {
+        const adjLeft = data[1].filter(([a]) => a == vertex).map(([, b]) => b);
+        const adjRight = data[1].filter(([, b]) => b == vertex).map(([a]) => a);
+        return adjLeft.concat(adjRight);
     }
 
-    // create response array, set v1 to color 0
-    let colors = new Array(n).fill(-1);
-    colors[0] = 0;
+    const coloring = Array(data[0]).fill(undefined);
+    while (coloring.some((val) => val === undefined)) {
+        //Color a vertex in the graph
+        const initialVertex = coloring.findIndex((val) => val === undefined);
+        coloring[initialVertex] = 0;
+        const frontier = [initialVertex];
 
-    // BFS through the graph and assign colors
-    let queue = [];
-    queue.push(0);
+        //Propogate the coloring throughout the component containing v greedily
+        while (frontier.length > 0) {
+            const v = frontier.pop() || 0;
+            const neighbors = neighbourhood(v);
 
-    while (queue.length > 0) {
-        let next = queue.shift();
-        let color1 = colors[next];
-        let color2 = color1 ^ 1;
-        let adjacency = adjacencyMatrix[next];
-        for (let v = 0; v < n; v++) {
-            if (adjacency[v] !== 1) continue;
-            if (colors[v] === -1) {
-                colors[v] = color2;
-                queue.push(v);
-            } else if (colors[v] === color1) {
-                return "[]"; // invalid graph, why string?
+            //For each vertex u adjacent to v
+            for (const id in neighbors) {
+                const u = neighbors[id];
+
+                //Set the color of u to the opposite of v's color if it is new,
+                //then add u to the frontier to continue the algorithm.
+                if (coloring[u] === undefined) {
+                    if (coloring[v] === 0) coloring[u] = 1;
+                    else coloring[u] = 0;
+
+                    frontier.push(u);
+                }
+
+                //Assert u,v do not have the same color
+                else if (coloring[u] === coloring[v]) {
+                    //If u,v do have the same color, no proper 2-coloring exists, meaning
+                    //the player was correct to say there is no proper 2-coloring of the graph.
+                    return "[]";
+                }
             }
         }
     }
-    return colors;
+
+    return coloring;
 }
 
 // Compression III
