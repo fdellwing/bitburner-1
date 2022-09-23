@@ -32,6 +32,8 @@
  *      Total Ways to Sum II
  *      Unique Paths in a Grid I
  *      Unique Paths in a Grid II
+ *      Encryption I: Caesar Cipher
+ *      Encryption II: Vigenère Cipher
  * 
  * Args: None
  * 
@@ -150,6 +152,12 @@ function solve(type, data, server, contract, ns) {
             break;
         case "Compression I: RLE Compression":
             solution = rleCompress(data);
+            break;
+        case "Encryption I: Caesar Cipher":
+            solution = caesarCipher(data);
+            break;
+        case "Encryption II: Vigenère Cipher":
+            solution = vigenereCipher(data);
             break;
         default:
             ns.tprintf("ERROR: Contract type '%s' has no solving function.", type);
@@ -554,16 +562,16 @@ function totalWaysToSum(data) {
     return (dp[data] - 1);
 }
 
-function totalWaysToSumII(data){
+function totalWaysToSumII(data) {
     const n = data[0];
     const s = data[1];
     const ways = [1];
     ways.length = n + 1;
     ways.fill(0, 1);
     for (let i = 0; i < s.length; i++) {
-      for (let j = s[i]; j <= n; j++) {
-        ways[j] += ways[j - s[i]];
-      }
+        for (let j = s[i]; j <= n; j++) {
+            ways[j] += ways[j - s[i]];
+        }
     }
     return ways[n];
 }
@@ -805,7 +813,7 @@ function shortestPathInGrid(data) {
 
 // Proper 2-Coloring of a Graph
 
-function proper2ColoringOfAGraph(data){
+function proper2ColoringOfAGraph(data) {
     let n = data[0];    // number of vertices
     let a = data[1];    // adjacency data
 
@@ -1019,4 +1027,26 @@ function rleCompress(data) {
     }
     addEncodedRun(currentRun, runLength);
     return response;
+}
+
+// Encryption I: Caesar Cipher
+
+function caesarCipher(data) {
+    const cipher = [...data[0]]
+        .map((a) => (a === " " ? a : String.fromCharCode(((a.charCodeAt(0) - 65 - data[1] + 26) % 26) + 65)))
+        .join("");
+    return cipher;
+}
+
+// Encryption II: Vigenère Cipher
+
+function vigenereCipher(data) {
+    const cipher = [...data[0]]
+        .map((a, i) => {
+            return a === " "
+                ? a
+                : String.fromCharCode(((a.charCodeAt(0) - 2 * 65 + data[1].charCodeAt(i % data[1].length)) % 26) + 65);
+        })
+        .join("");
+    return cipher;
 }
