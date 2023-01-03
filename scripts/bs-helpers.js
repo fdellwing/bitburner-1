@@ -133,7 +133,9 @@ export function getFnIsAliveViaNsPs(ns) {
 export async function getNsDataThroughFile(ns, command, fName, args = [], verbose = false, maxRetries = 5, retryDelayMs = 50) {
     checkNsInstance(ns, '"getNsDataThroughFile"');
     if (!verbose) disableLogs(ns, ['run', 'isRunning']);
-    return await getNsDataThroughFile_Custom(ns, ns.run, ns.isRunning, command, fName, args, verbose, maxRetries, retryDelayMs);
+    const fnRun = ns.run.bind(ns);
+    const fnIsAlive = ns.isRunning.bind(ns);
+    return await getNsDataThroughFile_Custom(ns, fnRun, fnIsAlive, command, fName, args, verbose, maxRetries, retryDelayMs);
 }
 
 /**
@@ -185,7 +187,8 @@ export async function getNsDataThroughFile_Custom(ns, fnRun, fnIsAlive, command,
 export async function runCommand(ns, command, fileName, args = [], verbose = false, maxRetries = 5, retryDelayMs = 50) {
     checkNsInstance(ns, '"runCommand"');
     if (!verbose) disableLogs(ns, ['run']);
-    return await runCommand_Custom(ns, ns.run, command, fileName, args, verbose, maxRetries, retryDelayMs);
+    const fnRun = ns.run.bind(ns);
+    return await runCommand_Custom(ns, fnRun, command, fileName, args, verbose, maxRetries, retryDelayMs);
 }
 
 /**
@@ -229,7 +232,8 @@ export async function runCommand_Custom(ns, fnRun, command, fileName, args = [],
 export async function waitForProcessToComplete(ns, pid, verbose) {
     checkNsInstance(ns, '"waitForProcessToComplete"');
     if (!verbose) disableLogs(ns, ['isRunning']);
-    return await waitForProcessToComplete_Custom(ns, ns.isRunning, pid, verbose);
+    const fnIsAlive = ns.isRunning.bind(ns);
+    return await waitForProcessToComplete_Custom(ns, fnIsAlive, pid, verbose);
 }
 /**
  * An advanced version of waitForProcessToComplete that lets you pass your own "isAlive" test to reduce RAM requirements (e.g. to avoid referencing ns.isRunning)
@@ -317,7 +321,7 @@ export async function getActiveSourceFiles_Custom(ns, fnGetNsDataThroughFile, in
     let tempFile = '/Temp/owned-source-files.txt';
     // Find out what source files the user has unlocked
     let dictSourceFiles;
-    try { await fnGetNsDataThroughFile(ns, `Object.fromEntries(ns.getOwnedSourceFiles().map(sf => [sf.n, sf.lvl]))`, tempFile); } catch { }
+    try { await fnGetNsDataThroughFile(ns, `Object.fromEntries(ns.singularity.getOwnedSourceFiles().map(sf => [sf.n, sf.lvl]))`, tempFile); } catch { }
     if (!dictSourceFiles) { // Bit of a hack, but if RAM is so low that this fails, we can fallback to using an older version of this file, and even assuming we have no source files.
         dictSourceFiles = ns.read(tempFile)
         dictSourceFiles = dictSourceFiles ? JSON.parse(dictSourceFiles) : {};
